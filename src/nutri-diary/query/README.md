@@ -235,8 +235,8 @@ LIMIT 1, 20;
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*b5YmhCJM97gtz20FWORTEQ.png" width=70%>
 <img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*OmaEboWkXDHaxPWZ-vdAgg.png" width=70%>
 
-쿼리의 수행시간은 평균적으로 150~250(ms)가 나왔습니다.
-작업 하나 하나가 큰 비용이 들지는 않지만, 여러 과정이 누적되니 대략 2~3배정도 시간이 늘어났습니다.
+쿼리의 수행시간은 평균적으로 150\~250(ms)가 나왔습니다.
+작업 하나 하나가 큰 비용이 들지는 않지만, 여러 과정이 누적되니 대략 2\~3배정도 시간이 늘어났습니다.
 
 여기서 쿼리를 더욱 최적화를 할 방법을 찾아볼 수 있겠지만,
 과연 이러한 한방 쿼리가 적절할까요?
