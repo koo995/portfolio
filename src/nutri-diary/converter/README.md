@@ -3,7 +3,7 @@
 
 프로젝트를 테스트하는 도중 아래의 그림과 같이 컨버터를 찾을 수 없다는 에러사항이 발생했습니다. 이 글의 원글은 [여기](https://medium.com/@gunhong951/h2-database-json-%EC%BB%AC%EB%9F%BC%EC%97%90-%EB%8C%80%ED%95%9C-converter-%EC%97%90%EB%9F%AC-%EC%83%81%ED%99%A9-bedaa2ac3938)서 확인할 수 있습니다.
 
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*64n0TxkrPGhlo3EOkMkoHg.png" width=70%>
+<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*64n0TxkrPGhlo3EOkMkoHg.png" width=90%>
 
 저는 현재 Spring Data JDBC 을 사용하는 중이며, 혹시나 컨버터가 제대로 등록되지 않았는지 체크해 보았지만 컨버터는 제대로 등록되었습니다.
 
@@ -105,7 +105,7 @@ INSERT INTO MEMBER(USERNAME, ADDRESS) VALUES(?, ?, ?);
 지금쯤이면 여러분은 아마 H2 에서 1, 2번 row 와 3번 row 의 차이가 무엇인지 궁금하실 겁니다.
 ===========================================================
 
-![위의 이미지를 다시 가져왔습니다.](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*Ah4a1O9kcYaaN1TIbvZ_Hw.jpeg)
+<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*Ah4a1O9kcYaaN1TIbvZ_Hw.jpeg" width=70%>
 
 H2 에서는 아래와 같이 설명을 합니다.
 >[Attempt to write a string without “FORMAT JSON” claues will cause implicit conversion of character string value to simple JSON with a string literal inside it ('text' -> JSON '"text"').](https://github.com/h2database/h2database/issues/3782#issuecomment-1517086930)
@@ -114,7 +114,7 @@ H2 에서는 아래와 같이 설명을 합니다.
 
 요약하면, 이러한 현상은 우리가 데이터 접근 기술의 Converter 를 이용하여 Address 객체를 JSON 즉, **String 리터럴로 변환**하여 JSON 컬럼에 저장 할 때 H2에서 **암묵적인 변환**이 나타납니다. 그리고 그 결과는 3번 row 와 같이 escaped string 형식의 JSON String 이 저장됩니다.
 
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*YnNrq6VCLaJJXHMK03cP6Q.png" width=70%>
+<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*YnNrq6VCLaJJXHMK03cP6Q.png" width=90%>
 
 위와 같이 INSERT 쿼리의 로그가 나타났다면, 실제 H2 에 저장될 땐 아래와 같은 쿼리가 실행될 것이고, 따라서 JSON String 형태로 저장됩니다.
 
