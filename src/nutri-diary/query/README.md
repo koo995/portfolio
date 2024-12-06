@@ -59,7 +59,7 @@ LIMIT 1, 20;
 하지만 위의 쿼리를 적용하고 테스트를 해봤을 때 3913(ms)초의 시간이 걸리는 만큼 심각하게 느린 속도를 보입니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*8Zs2U9qbPE92nNJi2Uaw9w.png" width=70%>
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*86YKH_qfed7f2WTFFmwwiQ.png" width=70%>
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*86YKH_qfed7f2WTFFmwwiQ.png" width=90%>
 
 실행 순서는 다음 기준으로 읽으면 됩니다.
 
@@ -106,7 +106,7 @@ LEFT JOIN 안에 있던 서브쿼리를 바깥으로 빼내고 review 테이블�
 하지만 여전히 쿼리가 3642(ms)정도로 매우 낮은 성능을 보였습니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*VCbLuss8sfQzfCKTaS7l1Q.png" width=70%>
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*oQai6VZIHHRQMyWe4xTR-w.png" width=70%>
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*oQai6VZIHHRQMyWe4xTR-w.png" width=90%>
 
 다시 실행계획을 분석해 보았을 때, 예상한 대로 전문 검색으로 탐색된 product의 레코드에 대해서만 review 테이블을 탐색하는 것을 볼 수 있습니다.
 
@@ -142,7 +142,7 @@ LIMIT 1, 20;
 추가로 한가지 궁금증이 생겨 똑같은 구조의 쿼리에서 전문 검색 대신 WHERE LIKE 문을 사용해 봤습니다. 그런데 놀랍게도 35(ms)로 매우 빠른 성능이 나왔습니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*c1Myglfsdb9k7QfT-SHWWA.png" width=70%>
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*sEdC_aDLT5z7Dc7hSOG_Vw.png" width=70%>
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*sEdC_aDLT5z7Dc7hSOG_Vw.png" width=90%>
 
 제일 먼저 product 테이블에 기본 키(PRIMARY)를 활용한 인덱스 스캔이 수행되었습니다.
 product_name에는 인덱스가 걸려있지 않습니다.
@@ -173,7 +173,7 @@ LIMIT 1, 20;
 먼저, product 테이블에 전문검색 결과를 탐색하고 그 결과에 해당하는 review만 갯수를 구했습니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*DbM_4E-Fvny12o9xiBYfCA.png" width=70%>
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*fm7gj2G8nJNl1lJAMAMyew.png" width=70%>
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*fm7gj2G8nJNl1lJAMAMyew.png" width=90%>
 
 실행계획을 살펴봤을 때, 전문검색의 결과에서 limit 20에 근접하는 레코드 갯수를 읽어왔습니다.
 그리고 여기서 총 쿼리의 실행시간은 84(ms)정도 나왔습니다.
@@ -233,7 +233,7 @@ LIMIT 1, 20;
 앞선 쿼리와 유사하게 여기서도 Subquery로 풀어나갔습니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*b5YmhCJM97gtz20FWORTEQ.png" width=70%>
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*OmaEboWkXDHaxPWZ-vdAgg.png" width=70%>
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*OmaEboWkXDHaxPWZ-vdAgg.png" width=90%>
 
 쿼리의 수행시간은 평균적으로 150\~250(ms)가 나왔습니다.
 작업 하나 하나가 큰 비용이 들지는 않지만, 여러 과정이 누적되니 대략 2\~3배정도 시간이 늘어났습니다.
