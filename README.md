@@ -1,6 +1,6 @@
 # 구건홍 | 포트폴리오
 
-# `Project`.
+# `Project`
 
 # Nutri-Diary(개인 프로젝트)
 ## Stack: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, NCP(Naver Cloud Platform), Jenkins
