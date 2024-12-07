@@ -5,8 +5,8 @@
 
 지난 프로젝트를 진행할 때, 회원가입과 로그인 처리를 위하여 Firebase을 이용했습니다. 안드로이드 앱에서 인증을 완료하면 백엔드는 로그인과 회원가입을 간단히 처리할 수 있기 때문입니다. 이 과정에서 저는 Spring 의 Interceptor 와 ArgumentResolver 을 이용하여 인증을 처리했습니다.
 
-**구현 요구사항의 특이사항**은 백엔드에서 로그인이나 회원가입 API 를 만들필요 없이, 프론트엔드에서 구글, 이메일과 같은 로그인을 Firebase서버를 통해 인증하고, 그 결과로 얻은 idToken만 Authorization 헤더에 담아서 특정 API을 요청합니다.
-그러면 백엔드가 헤더에서 토큰을 추출 후, Firebase SDK을 이용해 유효한 토큰인지 조회를 하고, **DB에서 조회된 회원이 있으면 회원을 반환(로그인), 없으면 회원 생성 후 반환(자동으로 회원가입)**하여 ArgumentResolver를 통해 컨트롤러에 주입했습니다. (프로세스가 참 이상하죠…? 하하…)
+`구현 요구사항의 특이사항`은 백엔드에서 로그인이나 회원가입 API 를 만들필요 없이, 프론트엔드에서 구글, 이메일과 같은 로그인을 Firebase서버를 통해 인증하고, 그 결과로 얻은 idToken만 Authorization 헤더에 담아서 특정 API을 요청합니다.
+그러면 백엔드가 헤더에서 토큰을 추출 후, Firebase SDK을 이용해 유효한 토큰인지 조회를 하고, `DB에서 조회된 회원이 있으면 회원을 반환(로그인), 없으면 회원 생성 후 반환(자동으로 회원가입)`하여 ArgumentResolver를 통해 컨트롤러에 주입했습니다. (프로세스가 참 이상하죠…? 하하…)
 
 여기서 핵심인 인증과정 코드를 설명하면
 
@@ -84,7 +84,7 @@ Spring Interceptor는 위와 같이 구성했습니다.
 preHandle을 오버라이딩하여 메서드내에서 Authorization 헤더 값을 얻고,
 Firebase 서버에 해당 토큰을 보내어 유효한지 검증합니다.
 
-검증된 FirebaseToken 타입의 decodedToken 에는 **유저의 정보**가 들어있고 그 값을 HttpServletRequest 에 저장합니다.
+검증된 FirebaseToken 타입의 decodedToken 에는 `유저의 정보`가 들어있고 그 값을 HttpServletRequest 에 저장합니다.
 (HttpServletRequest 에 저장한 decodedToken 은 ArgumentResolver 에서 필요하면 꺼내쓰기 위해 저장하였습니다.)
 
 ```java
@@ -137,8 +137,8 @@ public Post createPost(@RequestBody Post post, @Login Member member) {
 
 ArgumentResolver 은 위와 같이 컨트롤러의 매개변수에 @Login 애너테이션이 있으면 로그인된 멤버를 주입하도록 했습니다.
 
-이때, FirebaseToken 타입의 decodedToken에는 Firebase에서 관리하는 유저식별 Id(앞서 설명한 uid) 정보가 있는데 이것을 이용하여 프로젝트의 **DB에서 사용자를 조회하고
-만약, 해당하는 사용자가 없다면 새로운 Member 엔티티를 생성하여 DB 테이블에 멤버를 저장합니다.**
+이때, FirebaseToken 타입의 decodedToken에는 Firebase에서 관리하는 유저식별 Id(앞서 설명한 uid) 정보가 있는데 이것을 이용하여 프로젝트의 `DB에서 사용자를 조회하고
+만약, 해당하는 사용자가 없다면 새로운 Member 엔티티를 생성하여 DB 테이블에 멤버를 저장합니다.`
 
 즉, 사용자가 애플리케이션을 “처음" 사용할 때 회원가입이 자동으로 이루어집니다.
 
@@ -159,15 +159,15 @@ ArgumentResolver 은 위와 같이 컨트롤러의 매개변수에 @Login 애너
 
 문제의 상황은
 
-“**한명의 사용자가 첫 애플리케이션 실행에서 여러개의 요청을 동시에 발생시켰을 때**” 였습니다.
+`“한명의 사용자가 첫 애플리케이션 실행에서 여러개의 요청을 동시에 발생시켰을 때”` 였습니다.
 
 그리고 모두 컨트롤러에 @Login 애너테이션이 붙어 있어서 ArgumentResolver 의 적용 대상이였습니다.
 
-즉, **“DB 에 멤버가 존재하면 그대로 반환하고 없으면 해당 멤버 엔티티를 생성, 저장 후 반환한다”** 라는 작업이 **하나의 작업**으로 처리되지 못했기 때문에 데이터베이스에는 아래와 같이 2개의 동일한 uid를 가진 멤버가 저장되는 것으로 판단하였습니다.
+즉, `“DB 에 멤버가 존재하면 그대로 반환하고 없으면 해당 멤버 엔티티를 생성, 저장 후 반환한다”` 라는 작업이 `하나의 작업`으로 처리되지 못했기 때문에 데이터베이스에는 아래와 같이 2개의 동일한 uid를 가진 멤버가 저장되는 것으로 판단하였습니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*Eqrf67CvAX0q0YmqwxZO3w.png" width=70%>
 
-이후 사용자가 ***새로운 요청***을 보내면 joinAndLogin()의 findByUid() 메서드는 한명의 멤버가 아닌, 2개의 멤버 레코드를 조회하여 로그인이 제대로 안되는 ***에러상황***이 발생했습니다.
+이후 사용자가 `새로운 요청`을 보내면 joinAndLogin()의 findByUid() 메서드는 한명의 멤버가 아닌, 2개의 멤버 레코드를 조회하여 로그인이 제대로 안되는 `에러상황`이 발생했습니다.
 
 원인을 하나씩 살펴보겠습니다.
 ================
@@ -195,10 +195,10 @@ public class AuthService {
 Spring 프레임워크는 하나의 request 요청을 하나의 스레드가 담당합니다.
 따라서 앞선 스크린 샷에 나타난 2개의 요청은 서로 다른 스레드가 처리를 합니다.
 
-**첫 번째 스레드**가 joinAndLogin() 메서드를 실행하고 findByUid() 메서드를 통해 데이터를 조회하는 동안 **다른 스레드**도 joinAndLogin() 메서드를 실행하고 동일한 uid로 findByUid() 을 수행할 수 있습니다.
+`첫 번째 스레드`가 joinAndLogin() 메서드를 실행하고 findByUid() 메서드를 통해 데이터를 조회하는 동안 `다른 스레드`도 joinAndLogin() 메서드를 실행하고 동일한 uid로 findByUid() 을 수행할 수 있습니다.
 두개의 요청 모두 동일한 Client의 요청이라면, 첫 번째 스레드가 멤버를 저장하고 뒤이어 두 번째 스레드가 추가로 멤버를 저장하게 됩니다.
 
-이를 방지하기 위해서는 **“DB 에서 조회된 멤버가 존재하면 그대로 반환하고, 없으면 해당 멤버 엔티티를 생성하고 저장 후 반환한다”** 과정을 하나의 트랜잭션으로 묶고 uid컬럼은 멤버를 유일하게 식별하기위해 **Uique 제약**이 필요하다는 판단이 들었습니다.
+이를 방지하기 위해서는 `“DB 에서 조회된 멤버가 존재하면 그대로 반환하고, 없으면 해당 멤버 엔티티를 생성하고 저장 후 반환한다”` 과정을 하나의 트랜잭션으로 묶고 uid컬럼은 멤버를 유일하게 식별하기위해 `Uique 제약`이 필요하다는 판단이 들었습니다.
 
 > 그렇다면 joinAndLogin() 메서드에 @Transactional 애너테이션을 붙이면 되겠구나?
 
@@ -230,7 +230,7 @@ public class AuthService {
 
 > 아! 트랜잭션이 원자성을 제공하지만 이것이 하나의 스레드가 findByUid() 를 호출할 때, 다른 스레드가 findByUid() 호출을 막는 것은 아니였지!
 
-라는 생각도 들어 **synchronized 키워드**도 추가해 보았습니다.
+라는 생각도 들어 `synchronized 키워드`도 추가해 보았습니다.
 
 > 그리고 지금부터 로그를 찍어보며 자세히 살펴보기 위해 findByUid() ~ orElseGet() 메서드를 아래와 같이 Optional<Member>로 풀어서 작성하겠습니다.
 
@@ -281,11 +281,11 @@ public class AuthService {
 
 
 이 말은 곧, Java 애플리케이션 코드의 원자성을 보장하지는 않습니다.
-**“DB 에서 조회된 멤버가 존재하면 그대로 반환하고, 없으면 해당 멤버 엔티티를 생성하고 저장 후 반환한다” 는** Java 코드의 메서드를 synchronized 키워드로 원자화하는 것은 DB 트랜잭션의 원자성과는 별개의 과정입니다.
+`“DB 에서 조회된 멤버가 존재하면 그대로 반환하고, 없으면 해당 멤버 엔티티를 생성하고 저장 후 반환한다”` 는 Java 코드의 메서드를 synchronized 키워드로 원자화하는 것은 DB 트랜잭션의 원자성과는 별개의 과정입니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*BELe6IrRy4GlU110GvxxUg.png" width=70%>
 
-MySQL의 **Repeatable Read Isolation Level** 에서는 MVCC(Multi Version Concurrency Control) 를 이용하여 트랜잭션 시작 시점(5번)의 레코드 스냅샷(undo 로그)을 가지고 있습니다. 5개의 트랜잭션이 동시에 시작할 때, 하나의 트랜잭션이 9번 이후 findByUid() 의 실제 SQL쿼리를 날리기도 전에 모두 트랜잭션을 시작(5번 작업)했습니다. 따라서 findByUid() 메서드의 결과는 **해당하는 레코드가 존재하지 않습니다**라는 동일한 결과를 나타낼 것입니다.
+MySQL의 `Repeatable Read Isolation Level` 에서는 MVCC(Multi Version Concurrency Control) 를 이용하여 트랜잭션 시작 시점(5번)의 레코드 스냅샷(undo 로그)을 가지고 있습니다. 5개의 트랜잭션이 동시에 시작할 때, 하나의 트랜잭션이 9번 이후 findByUid() 의 실제 SQL쿼리를 날리기도 전에 모두 트랜잭션을 시작(5번 작업)했습니다. 따라서 findByUid() 메서드의 결과는 `해당하는 레코드가 존재하지 않습니다`라는 동일한 결과를 나타낼 것입니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*tt2ahLjqb_pL8DhVSQcFHA.png" width=70%>
 
@@ -307,7 +307,7 @@ MySQL의 **Repeatable Read Isolation Level** 에서는 MVCC(Multi Version Concur
 
 ## 2. 동일한 uid 값에 대한 조회와 저장에서 Lock을 사용할 수 있지 않나?
 
-MySQL 의 InnoDB 는 **조회** 시 기본적으로 락(Lock)이 아닌 MVCC 로 Repeatable Read 을 처리하지만 아래와 같이 락을 걸 수 있습니다.
+MySQL 의 InnoDB 는 `조회` 시 기본적으로 락(Lock)이 아닌 MVCC 로 Repeatable Read 을 처리하지만 아래와 같이 락을 걸 수 있습니다.
 
 ```sql
 SELECT * FROM MEMBER WHERE uid="ASDW12SD3" FOR UPDATE; // 쓰기 잠금
