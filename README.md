@@ -1,9 +1,8 @@
 # 구건홍 | 포트폴리오
 
-# `Project`
-
 # Nutri-Diary(개인 프로젝트)
-## Stack: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, NCP(Naver Cloud Platform), Jenkins
+> 기술 스택: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, NCP(Naver Cloud Platform), Jenkins
+> 
 > GitHub: [https://github.com/f-lab-edu/nutri-diary](https://github.com/f-lab-edu/nutri-diary)
 
 ## 2024.07 ~ 진행중
@@ -59,7 +58,8 @@ H2와 MySQL의 DB 엔진 차이로 인한 여러 이슈를 해결하기 위해 T
     
 ---
 # Eco-Spot(팀 프로젝트)
-## Stack: Spring Boot, Spring Data JPA, QueryDSL, MySQL, GCP(Google Cloud Platform), Firebase
+> 기술 스택: Spring Boot, Spring Data JPA, QueryDSL, MySQL, GCP(Google Cloud Platform), Firebase
+> 
 > GitHub: [https://github.com/koo995/24_Solution_Challenge](https://github.com/koo995/24_Solution_Challenge)
 
 ## 2024.01 ~ 2024.02
