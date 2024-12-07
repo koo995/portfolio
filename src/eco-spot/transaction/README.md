@@ -261,8 +261,8 @@ public class AuthService {
     }
 }
 ```
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*9h6afD8H1cOZ65WOKz0tiQ.png" width=90%>
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*igpmG-cUwvehvgVLDLw8ng.png" width=90%>
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*9h6afD8H1cOZ65WOKz0tiQ.png">
+<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*igpmG-cUwvehvgVLDLw8ng.png">
 
 여전히 문제가 해결되지 않았습니다.
 ===================
@@ -283,15 +283,17 @@ public class AuthService {
 이 말은 곧, Java 애플리케이션 코드의 원자성을 보장하지는 않습니다.
 **“DB 에서 조회된 멤버가 존재하면 그대로 반환하고, 없으면 해당 멤버 엔티티를 생성하고 저장 후 반환한다” 는** Java 코드의 메서드를 synchronized 키워드로 원자화하는 것은 DB 트랜잭션의 원자성과는 별개의 과정입니다.
 
-![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*BELe6IrRy4GlU110GvxxUg.png)
+<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*BELe6IrRy4GlU110GvxxUg.png" width=70%>
 
-MySQL의 **Repeatable Read Isolation Level** 에서는 MVCC(Multi Version Concurrency Control) 를 이용하여 트랜잭션 시작 시점(5번)의 레코드 스냅샷(undo 로그)을 가지고 있습니다. 5개의 트랜잭션이 동시에 시작할 때, 하나의 트랜잭션이 9번 이후 findByUid() 의 실제 SQL쿼리를 날리기도 전에 모두 트랜잭션을 시작(5번 작업)했습니다. 따라서 findByUid() 메서드의 결과는 “**해당하는 레코드가 존재하지 않습니다”**라는 동일한 결과를 나타낼 것입니다.
+MySQL의 **Repeatable Read Isolation Level** 에서는 MVCC(Multi Version Concurrency Control) 를 이용하여 트랜잭션 시작 시점(5번)의 레코드 스냅샷(undo 로그)을 가지고 있습니다. 5개의 트랜잭션이 동시에 시작할 때, 하나의 트랜잭션이 9번 이후 findByUid() 의 실제 SQL쿼리를 날리기도 전에 모두 트랜잭션을 시작(5번 작업)했습니다. 따라서 findByUid() 메서드의 결과는 **해당하는 레코드가 존재하지 않습니다**라는 동일한 결과를 나타낼 것입니다.
 
-![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*tt2ahLjqb_pL8DhVSQcFHA.png)
+<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*tt2ahLjqb_pL8DhVSQcFHA.png" width=70%>
 
 하나의 트랜잭션이 먼저 조회 후 멤버 객체를 저장하고 커밋을 하더라도, 다른 트랜잭션들의 findByUid() 메서드의 결과는 **본인이 시작하던 시점 기준**으로 그 이전에 기록된 데이터들의 **스냅샷**을 바라봅니다.
 
-![synchronized 적용](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*AaGtx4M6u5H_VmTgkayr1g.png)
+> synchronized 적용
+
+<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*AaGtx4M6u5H_VmTgkayr1g.png" width=70%>
 
 고립 레벨을 조금 더 실감하기 위해서 joinAndLogin() 메서드에 synchronized 키워드를 적용한 경우를 살펴보겠습니다.
 
@@ -303,12 +305,11 @@ MySQL의 **Repeatable Read Isolation Level** 에서는 MVCC(Multi Version Concur
 
 만약, 그럼에도 커밋된 데이터를 읽는 결과를 확인해 보고 싶다면 제일 낮은 트랜잭션 고립 레벨인 Read Uncommitted Isolation Level을 적용하여 추가된 멤버 데이터를 볼 수 있습니다.
 
-2. 동일한 uid 값에 대한 조회와 저장에서 Lock을 사용할 수 있지 않나?
----------------------------------------------
+## 2. 동일한 uid 값에 대한 조회와 저장에서 Lock을 사용할 수 있지 않나?
 
 MySQL 의 InnoDB 는 **조회** 시 기본적으로 락(Lock)이 아닌 MVCC 로 Repeatable Read 을 처리하지만 아래와 같이 락을 걸 수 있습니다.
 
-```
+```sql
 SELECT * FROM MEMBER WHERE uid="ASDW12SD3" FOR UPDATE; // 쓰기 잠금
 SELECT * FROM MEMBER WHERE uid="ASDW12SD3" FOR SHARE;  // 읽기 잠금
 ```
