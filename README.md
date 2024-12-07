@@ -1,8 +1,8 @@
 # 구건홍 | 포트폴리오
 
-# Project.
+# `Project`.
 
-## Nutri-Diary(개인 프로젝트)
+# Nutri-Diary(개인 프로젝트)
 ## Stack: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, NCP(Naver Cloud Platform), Jenkins
 > GitHub: [https://github.com/f-lab-edu/nutri-diary](https://github.com/f-lab-edu/nutri-diary)
 
@@ -58,7 +58,7 @@ H2와 MySQL의 DB 엔진 차이로 인한 여러 이슈를 해결하기 위해 T
   총 3번의 리팩터링을 거쳐, 공통 부분을 추상화하고 Value Object를 생성. 이를 통해 11개의 클래스와 340줄의 코드를 5개의 클래스와 235줄의 코드로 줄여 더 간결하고 이해하기 쉬운 구조로 개선.
     
 ---
-## Eco-Spot(팀 프로젝트)
+# Eco-Spot(팀 프로젝트)
 ## Stack: Spring Boot, Spring Data JPA, QueryDSL, MySQL, GCP(Google Cloud Platform), Firebase
 > GitHub: [https://github.com/koo995/24_Solution_Challenge](https://github.com/koo995/24_Solution_Challenge)
 
