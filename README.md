@@ -49,14 +49,14 @@ H2와 MySQL의 DB 엔진 차이로 인한 여러 이슈를 해결하기 위해 T
 - Spring Data JDBC(또는 JPA)에서 DB 엔진에 따른 데이터 타입의 변환 차이
   >[자세히 보기: [https://github.com/koo995/resume/blob/main/src/nutri-diary/converter/README.md](https://github.com/koo995/resume/blob/main/src/nutri-diary/converter/README.md)]
     
-  테스트 코드 실행 시 JSON 타입 컬럼값을 객체로 변환하지 못하는 문제가 발생. 상황을 구체적으로 파악하기 위해 여러 케이스를 테스트해 본 결과, JPA에서도 동일한 문제가 발생.
-  이는 H2가 JSON 타입의 컬럼을 MySQL과 다르게 처리해서 발생하는 문제로 판단. 여러 해결 방안을 고려한 끝에, JSON 타입 대신 TEXT 타입으로 컬럼을 설정하기로 결정. 
+  테스트 코드 실행 시 JSON 타입 컬럼값을 객체로 변환하지 못하는 문제가 발생. 상황을 구체적으로 파악하기 위해 여러 케이스를 테스트하고 디버깅을 진행하며 추적한 결과, JPA에서도 동일한 문제가 발생.
+  이는 H2가 JSON 타입의 컬럼을 MySQL과 다르게 처리해서 발생하는 문제로 판단. 여러 방안을 검토하며 테스트용 컨버터를 만들거나 JSON 타입 대신 TEXT 타입을 사용하는 방법을 고려했고, 최종적으로 TestContainers를 도입하여 해결.
     
 - 단순한 비즈니스 로직의 과도한 복잡성을 개선하여 간결한 구조로 리팩터링
   > [자세히 보기: [https://github.com/f-lab-edu/nutri-diary/wiki/영양성분-계산-로직-리팩터링](https://github.com/f-lab-edu/nutri-diary/wiki/%EC%98%81%EC%96%91%EC%84%B1%EB%B6%84-%EA%B3%84%EC%82%B0-%EB%A1%9C%EC%A7%81-%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81)]
   
   비즈니스 로직을 전략 패턴과 팩토리 패턴을 적용하여 구현. 하지만 코드 리뷰를 통해 이 접근 방식이 비즈니스 로직을 이해하기 어렵게 만들고, 요구사항에 비해 복잡하다는 피드백을 받음.
-  총 3번의 리팩터링을 거쳐, 공통 부분을 추상화하고 Value Object를 생성. 이를 통해 11개의 클래스와 340줄의 코드를 5개의 클래스와 235줄로 줄여 더 간결하고 이해하기 쉬운 구조로 개선.
+  총 3번의 리팩터링을 거쳐, 공통 부분을 추상화하고 Value Object를 생성. 이를 통해 11개의 클래스와 340줄의 코드를 5개의 클래스와 235줄의 코드로 줄여 더 간결하고 이해하기 쉬운 구조로 개선.
     
 ---
 ## Eco-Spot(팀 프로젝트) GitHub: [https://github.com/koo995/24_Solution_Challenge](https://github.com/koo995/24_Solution_Challenge)
