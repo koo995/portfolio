@@ -2,9 +2,9 @@
 
 # Project.
 
-## Nutri-Diary(개인 프로젝트) GitHub: [https://github.com/f-lab-edu/nutri-diary](https://github.com/f-lab-edu/nutri-diary)
-
+## Nutri-Diary(개인 프로젝트)
 ## Stack: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, NCP(Naver Cloud Platform), Jenkins
+> GitHub: [https://github.com/f-lab-edu/nutri-diary](https://github.com/f-lab-edu/nutri-diary)
 
 ## 2024.07 ~ 진행중
 현재 개인적으로 진행 중이며, 백엔드 부분을 전담하고 있습니다. 2025년 1월부터는 팀원들과 함께 기획, 디자인, 클라이언트 부분을 재구성해 나갈 예정입니다.
@@ -58,9 +58,9 @@ H2와 MySQL의 DB 엔진 차이로 인한 여러 이슈를 해결하기 위해 T
   총 3번의 리팩터링을 거쳐, 공통 부분을 추상화하고 Value Object를 생성. 이를 통해 11개의 클래스와 340줄의 코드를 5개의 클래스와 235줄의 코드로 줄여 더 간결하고 이해하기 쉬운 구조로 개선.
     
 ---
-## Eco-Spot(팀 프로젝트) GitHub: [https://github.com/koo995/24_Solution_Challenge](https://github.com/koo995/24_Solution_Challenge)
-
+## Eco-Spot(팀 프로젝트)
 ## Stack: Spring Boot, Spring Data JPA, QueryDSL, MySQL, GCP(Google Cloud Platform), Firebase
+> GitHub: [https://github.com/koo995/24_Solution_Challenge](https://github.com/koo995/24_Solution_Challenge)
 
 ## 2024.01 ~ 2024.02
 본 프로젝트는 4명의 팀원이 함께 진행했습니다. 저는 백엔드를 전담했으며, 클라이언트는 안드로이드 앱으로 구현되었습니다.
