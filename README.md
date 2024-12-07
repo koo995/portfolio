@@ -41,13 +41,13 @@ H2와 MySQL의 DB 엔진 차이로 인한 여러 이슈를 해결하기 위해 T
 ## Issues
 
 - 조회 쿼리의 전체 수행 시간 30배 향상
-  > [자세히 보기: [https://github.com/koo995/resume/blob/main/src/nutri-diary/query/README.md](https://github.com/koo995/resume/blob/main/src/nutri-diary/query/README.md)]
+  > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/query/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/query/README.md)]
   
   기존 쿼리 수행 시 약 3~4초가 소요. 실행 계획을 분석하여 문제점을 파악한 후, 쿼리 구조를 변경.
   그 결과, 쿼리의 수행 시간이 약 0.08초로 줄어들어 30배 이상의 성능 향상을 달성.
     
 - Spring Data JDBC(또는 JPA)에서 DB 엔진에 따른 데이터 타입의 변환 차이
-  >[자세히 보기: [https://github.com/koo995/resume/blob/main/src/nutri-diary/converter/README.md](https://github.com/koo995/resume/blob/main/src/nutri-diary/converter/README.md)]
+  >[자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/converter/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/converter/README.md)]
     
   테스트 코드 실행 시 JSON 타입 컬럼값을 객체로 변환하지 못하는 문제가 발생. 상황을 구체적으로 파악하기 위해 여러 케이스를 테스트하고 디버깅을 진행하며 추적한 결과, JPA에서도 동일한 문제가 발생.
   이는 H2가 JSON 타입의 컬럼을 MySQL과 다르게 처리해서 발생하는 문제로 판단. 여러 방안을 검토하며 테스트용 컨버터를 만들거나 JSON 타입 대신 TEXT 타입을 사용하는 방법을 고려했고, 최종적으로 TestContainers를 도입하여 해결.
@@ -84,13 +84,12 @@ GCP를 활용해 간단한 인프라를 구성했습니다. 팀원들마다 선�
 
 ## Issues
 - JPA에서 엔티티 간의 연관관계 확인을 위한 의도치 않은 쿼리 발생
-  > [자세히 보기: [https://github.com/koo995/resume/blob/main/src/eco-spot/one-to-one/README.md](https://github.com/koo995/resume/blob/main/src/eco-spot/one-to-one/README.md)]
+  > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/eco-spot/one-to-one/README.md](https://github.com/koo995/portfolio/blob/main/src/eco-spot/one-to-one/README.md)]
   
   일대일 양방향 관계에서 Lazy loading이 적용되지 않는 문제가 발생. 원인을 분석한 결과, 외래키를 관리하는 엔티티가 아닌 반대 방향에서 조회 시 연관관계 확인을 위해 불필요한 쿼리가 발생하는 것을 확인.
   이를 해결하기 위해 불필요한 양방향 관계를 단방향 관계로 변경하여 필요 없는 쿼리 발생을 방지.
     
 - Firebase을 이용한 인증 과정에서 동시성 문제
-  > [자세히 보기: [https://github.com/koo995/resume/blob/main/src/eco-spot/transaction/README.md](https://github.com/koo995/resume/blob/main/src/eco-spot/transaction/README.md)]
+  > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/eco-spot/transaction/README.md](https://github.com/koo995/portfolio/blob/main/src/eco-spot/transaction/README.md)]
   
-  인증 과정에서 중복 회원가입으로 인한 API 실행 에러 발생. 문제 해결을 위해 인증 과정을 원자화해야 한다고 판단했지만 문제 해결 실패.
-  상황을 더 분석한 결과, Spring AOP 트랜잭션 처리와 애플리케이션/DB 원자성 구분 미흡이 원인. 해결책으로 유니크 제약 조건을 적용하고 재시도 로직을 구현.
+  인증 과정에서 중복 회원가입으로 인한 API 실행 에러가 발생. 중복 문제는 유니크 제약조건을 적용하여 간단히 해결할 수 있었지만, 이 과정에서 트랜잭션이 적용되지 않은 코드를 발견. 자동 회원가입과 로그인 구현을 위해 트랜잭션을 적용했으나, 원자성이 제대로 보장되지 않아 문제가 지속됨. 문제 상황을 재구현하고 디버깅을 통해 분석한 결과, Spring AOP의 트랜잭션 처리와 애플리케이션/DB 원자성에 대한 이해가 부족했던 것이 원인. 해결책으로 유니크 제약 조건을 적용하고 재시도 로직을 구현.
