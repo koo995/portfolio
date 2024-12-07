@@ -291,9 +291,9 @@ MySQL의 `Repeatable Read Isolation Level` 에서는 MVCC(Multi Version Concurre
 
 하나의 트랜잭션이 먼저 조회 후 멤버 객체를 저장하고 커밋을 하더라도, 다른 트랜잭션들의 findByUid() 메서드의 결과는 **본인이 시작하던 시점 기준**으로 그 이전에 기록된 데이터들의 **스냅샷**을 바라봅니다.
 
-> synchronized 적용
-
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*AaGtx4M6u5H_VmTgkayr1g.png" width=70%>
+
+> synchronized 적용한 경우
 
 고립 레벨을 조금 더 실감하기 위해서 joinAndLogin() 메서드에 synchronized 키워드를 적용한 경우를 살펴보겠습니다.
 
