@@ -48,12 +48,14 @@ H2와 MySQL의 DB 엔진 차이로 인한 여러 이슈를 해결하기 위해 T
   >[자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/converter/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/converter/README.md)]
     
   테스트 코드 실행 시 JSON 타입 컬럼값을 객체로 변환하지 못하는 문제가 발생. 상황을 구체적으로 파악하기 위해 여러 케이스를 테스트하고 디버깅을 진행하며 추적한 결과, JPA에서도 동일한 문제가 발생.
+  
   이는 H2가 JSON 타입의 컬럼을 MySQL과 다르게 처리해서 발생하는 문제로 발견. 여러 방안을 검토하며 테스트용 컨버터를 만들거나 JSON 타입 대신 TEXT 타입을 사용하는 방법을 고려했고, 최종적으로 TestContainers를 도입하여 해결.
     
 - 단순한 비즈니스 로직의 과도한 복잡성을 개선하여 간결한 구조로 리팩터링
   > [자세히 보기: [https://github.com/f-lab-edu/nutri-diary/wiki/영양성분-계산-로직-리팩터링](https://github.com/f-lab-edu/nutri-diary/wiki/%EC%98%81%EC%96%91%EC%84%B1%EB%B6%84-%EA%B3%84%EC%82%B0-%EB%A1%9C%EC%A7%81-%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81)]
   
   비즈니스 로직을 전략 패턴과 팩토리 패턴을 적용하여 구현. 하지만 코드 리뷰를 통해 이 접근 방식이 비즈니스 로직을 이해하기 어렵게 만들고, 요구사항에 비해 복잡하다는 피드백을 받음.
+  
   총 3번의 리팩터링을 거쳐, 공통 부분을 추상화하고 Value Object를 생성. 이를 통해 11개의 클래스와 340줄의 코드를 5개의 클래스와 235줄의 코드로 줄여 더 간결하고 이해하기 쉬운 구조로 개선.
     
 ---
@@ -86,9 +88,14 @@ GCP를 활용해 간단한 인프라를 구성했습니다. 팀원들마다 선�
   > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/eco-spot/one-to-one/README.md](https://github.com/koo995/portfolio/blob/main/src/eco-spot/one-to-one/README.md)]
   
   일대일 양방향 관계에서 Lazy loading이 적용되지 않는 문제가 발생. 원인을 분석한 결과, 외래키를 관리하는 엔티티가 아닌 반대 방향에서 조회 시 연관관계 확인을 위해 불필요한 쿼리가 발생하는 것을 확인.
+
   이를 해결하기 위해 불필요한 양방향 관계를 단방향 관계로 변경하여 필요 없는 쿼리 발생을 방지.
     
 - Firebase 인증을 활용한 자동 회원가입과 로그인 과정의 동시성 이슈
   > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/eco-spot/transaction/README.md](https://github.com/koo995/portfolio/blob/main/src/eco-spot/transaction/README.md)]
   
-  인증 과정에서 중복 회원가입으로 인한 API 실행 에러가 발생. 중복 문제는 유니크 제약조건을 적용하여 간단히 해결할 수 있었지만, 이 과정에서 트랜잭션이 적용되지 않은 코드를 발견. 자동 회원가입과 로그인 구현을 위해 트랜잭션을 적용했으나, 원자성이 제대로 보장되지 않아 문제가 지속됨. 문제 상황을 재구현하고 디버깅을 통해 분석한 결과, Spring AOP의 트랜잭션 처리와 애플리케이션/DB 원자성에 대한 이해가 부족했던 것이 원인. 처음에는 유니크 제약 조건을 적용하고 DataIntegrityViolationException 발생 시 재시도 로직을 추가하여 해결. 하지만 이 예외는 유니크 제약 조건 위반 외의 경우에도 발생할 수 있어 의도하지 않은 재시도가 실행될 수 있다는 문제가 존재. 최종적으로 API 호출 프로세스를 분리하는 방식으로 개선.
+  인증 과정에서 중복 회원가입으로 인한 API 실행 에러가 발생. 중복 문제는 유니크 제약조건을 적용하여 간단히 해결할 수 있었지만, 이 과정에서 트랜잭션이 적용되지 않은 코드를 발견.
+
+  자동 회원가입과 로그인 구현을 위해 트랜잭션을 적용했으나, 원자성이 제대로 보장되지 않아 문제가 지속됨. 문제 상황을 재구현하고 디버깅을 통해 분석한 결과, Spring AOP의 트랜잭션 처리와 애플리케이션/DB 원자성에 대한 이해가 부족했던 것이 원인.
+
+  처음에는 유니크 제약 조건을 적용하고 DataIntegrityViolationException 발생 시 재시도 로직을 추가하여 해결. 하지만 이 예외는 유니크 제약 조건 위반 외의 경우에도 발생할 수 있어 의도하지 않은 재시도가 실행될 수 있다는 문제가 존재. 최종적으로 API 호출 프로세스를 분리하는 방식으로 개선.
