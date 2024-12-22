@@ -185,7 +185,7 @@ public class JdbcTemplateProductSearchRepository {
 
 테스트의 결과는 매우 심각했습니다.
 
-평균 TPS(Transaction Per Second)가 2.1 나왔고, 응답 시간은 점점 늦어져 30초가 나왔습니다. 또한 에러율이 51.3%가 나왔습니다.
+평균 TPS(Transaction Per Second)가 2.1 나왔고, 응답 시간은 점점 늦어져 30초가 나왔습니다. 또한 에러율이 51.3%(958개 중에 491개 실패)가 나왔습니다.
 
 ![captionless image](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*8dQKK3sSJ1qoTVRA_8l6_g.png)
 
@@ -296,7 +296,7 @@ MySQL은 전문 검색으로 매칭되는 모든 rows에 대해 가중치를 계
 
 TPS: 2.1 -> 3.7
 
-에러율: 51.3% -> 28.6%
+에러율: 51.3% -> 28.6%(1372개 중에 393개 실패)
 
 Elasticsearch 엔진을 도입.
 =====================
