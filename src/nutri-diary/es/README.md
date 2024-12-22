@@ -18,7 +18,9 @@ API의 성능을 개선하기 위해선 어떻게 접근해야할까? (쿼리만
 어떤 문제를 해결하고 싶은가?
 ================
 
-개선해야할 목표는 단순히 쿼리의 수행시간을 단축시키는 부분이 아닙니다. 쿼리의 수행시간 개선은 API의 성능을 향상시키는 도구 중 하나일 뿐입니다. 조금 더 크게 보아서 문제를 정의하면, 해당 쿼리를 포함하고 있는 API의 성능이 나오지 않는 것을 문제로 정의할 수 있습니다. 그리고 지금부터 목표는 API의 성능을 향상시키는 것입니다.
+개선해야할 목표는 단순히 쿼리의 수행시간을 단축시키는 부분이 아닙니다. 쿼리의 수행시간 개선은 API의 성능을 향상시키는 도구 중 하나일 뿐입니다.
+
+조금 더 크게 보아서 문제를 정의하면, 해당 쿼리를 포함하고 있는 API의 성능이 나오지 않는 것을 문제로 정의할 수 있습니다. 그리고 지금부터 목표는 API의 성능을 향상시키는 것입니다.
 
 먼저 비즈니스 요구사항을 정의합니다.
 ====================
@@ -145,7 +147,8 @@ API 호출 시나리오에서는 검색 키워드를 랜덤한 숫자나 문자�
 @Transactional
 public class JdbcTemplateProductSearchRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    DataClassRowMapper<ProductSearchResponse> beanPropertyRowMapper = new DataClassRowMapper<>(ProductSearchResponse.class);
+    private final DataClassRowMapper<ProductSearchResponse> beanPropertyRowMapper = new DataClassRowMapper<>(ProductSearchResponse.class);
+
     public Page<ProductSearchResponse> findFullTextSearch(String keyword, Pageable pageable) {
         Integer total = getTotalCount(keyword);
         
@@ -221,7 +224,7 @@ API의 응답은 모두 성공하였지만, 평균 TPS(Transaction Per Second)�
 ![captionless image](https://miro.medium.com/v2/resize:fit:726/format:webp/1*xYMAfZqzcksO-mLKNECojQ.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1276/format:webp/1*2l3j3lRFaOJMZPSmG-RodA.png)
 --- | ---
 
-테스트 결과, 두 번째 Scale Up 스펙(vCPU 32EA, Memory 128GB)으로 테스트를 진행해도 평균 TPS 10, 응답 시간이 평균 15초가 걸렸습니다.
+테스트 결과, 두 번째 Scale Up 스펙(vCPU 32EA, Memory 128GB)으로 테스트를 진행해도 평균 TPS 10.5, 응답 시간이 평균 15.167초가 걸렸습니다.
 다만 CPU 사용량은 30%까지 감소했습니다.
 
 (Grafana 대시보드에서 중간에 값이 비어있는 현상이 발견되었습니다. DB 인스턴스의 스펙을 최대 사양으로 Scale Up하여 CPU 사용량을 30%까지 낮췄음에도 이 현상이 계속되는 것으로 보아, Prometheus가 메트릭 수집에 실패한 것으로 추정됩니다. 모든 Grafana 대시보드의 값이 일시적으로 누락된 점을 고려할 때 Actuator가 제대로 동작하지 않은 것으로 의심되며, 이 문제는 추후 살펴보도록 하겠습니다.)
@@ -286,7 +289,7 @@ MySQL은 전문 검색으로 매칭되는 모든 rows에 대해 가중치를 계
 실제로 OFFSET을 0으로 설정한 경우와 비교해보았으나 성능상 유의미한 차이는 없었고, 페이징을 위한 COUNT(*) 쿼리를 제거했을 때도 미미한 성능 개선만 있었습니다.
 (단순히 하나의 트랜잭션에서 2개의 쿼리가 나가던 것을 1개의 쿼리만 나가도록 바꾸니 성능이 대략 2배 정도 좋아지는 매우 당연한 현상…)
 
-![captionless image](https://miro.medium.com/v2/resize:fit:464/format:webp/1*i2GNyY5MwBDBoOq6jV4Quw.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1538/format:webp/1*Cy1jzImjlqR23S9msNbr5g.png)
+![captionless image](https://cdn-images-1.medium.com/max/2400/1*_S3mFVFT3rjsLEYIhBEQdA.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1538/format:webp/1*Cy1jzImjlqR23S9msNbr5g.png)
 --- | ---
 
 ![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*57nSqZfrQM7fvlfuY05B9g.png)
@@ -390,7 +393,8 @@ product와 diet_tag는 다대다 관계를 가지며, 중간에 product_diet_tag
 @Transactional
 public class JdbcTemplateProductSearchRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    DataClassRowMapper<ProductSearchResponse> beanPropertyRowMapper = new DataClassRowMapper<>(ProductSearchResponse.class);
+    private final DataClassRowMapper<ProductSearchResponse> beanPropertyRowMapper = new DataClassRowMapper<>(ProductSearchResponse.class);
+
     public Page<ProductSearchResponse> findFullTextSearch(String keyword, Pageable pageable) {
         Integer total = getTotalCount(keyword);
         String sql = "SELECT " +
@@ -408,6 +412,7 @@ public class JdbcTemplateProductSearchRepository {
         List<ProductSearchResponse> queried = namedParameterJdbcTemplate.query(sql, parameters, beanPropertyRowMapper);
         return new PageImpl<>(queried, pageable, total);
     }
+
     private Integer getTotalCount(String keyword) {
         String sql = "SELECT COUNT(*) " +
                 "FROM product p " +
@@ -452,7 +457,8 @@ public class ProductSearchService {
     private final ReviewRepository reviewRepository;
     private final ProductDietTagRepository productDietTagRepository;
     private final ProductSearchResponseMapper productSearchResponseMapper;
-    public Page<ProductSearchResponse> search(String keyword, Pageable pageable) {
+
+        public Page<ProductSearchResponse> search(String keyword, Pageable pageable) {
         // ProductDocument는 Elasticsearch에 저장된 각 데이터를 매핑합니다.
         // Elasticsearch을 이용해서 keyword에 해당하는 ProductDocument를 검색합니다.
         Page<ProductDocument> productDocuments = productDocumentRepository.findByProductName(keyword, pageable);
@@ -527,7 +533,9 @@ API에서 제공해야 할 요구사항이 늘어날수록 이를 억지로 쿼�
 
 또한, product 테이블을 탐색하는 것은 전문 검색을 사용하는 경우뿐만 아니라 다양한 경우에도 사용될 수 있었습니다. 이때마다 복잡한 서브쿼리나 조인을 통해서 review의 갯수나 tag를 가져오는 쿼리를 작성하는 것은 비효율적이라 판단했고, 이에 따라 프로세스와 테이블 구조를 더 유연하게 재사용할 수 있도록 개선할 필요성을 느꼈습니다.
 
-하지만 테이블 구조를 변경한다면 새로운 데이터를 넣고 쿼리 시간을 측정해서 이전 테이블 구조의 결과와 비교하는 방식은 기준이 부적절하다 생각했습니다. 더 정확한 기준을 잡기 위해 고민하던 중, 실제로 해결하고자 했던 문제는 해당 쿼리를 포함한 API의 성능을 개선하는 것이 문제였음을 돌이켜 보았습니다.
+하지만 테이블 구조를 변경한다면 새로운 데이터를 넣고 쿼리 시간을 측정해서 이전 테이블 구조의 결과와 비교하는 방식은 기준이 부적절하다 생각했습니다.
+
+더 정확한 기준을 잡기 위해 고민하던 중, 실제로 해결하고자 했던 문제는 해당 쿼리를 포함한 API의 성능을 개선하는 것이 문제였음을 돌이켜 보았습니다.
 
 처음에는 쿼리 튜닝으로만 문제를 해결하려 했으나, 더 넓게 문제를 정의하니 고려할 수 있는 선택지가 많아졌고 기존 API 개발 방식의 문제점도 파악할 수 있었습니다. 그리고 결과적으로 실제 사용 가능한 수준의 API를 개발할 수 있게 되었습니다.
 
