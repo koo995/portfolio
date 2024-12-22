@@ -208,8 +208,11 @@ API의 응답은 모두 성공하였지만, 평균 TPS(Transaction Per Second)�
 그리고 다음 번외 테스트로 DB 인스턴스의 스펙을 단계적으로 Scale Up 해보았습니다.
 
 스펙 변경 내역:
+
 기존: vCPU 2EA, Memory 8GB
+
 첫 번째 Scale Up: vCPU 8EA, Memory 32GB
+
 두 번째 Scale Up: vCPU 32EA, Memory 128GB
 
 ![captionless image](https://miro.medium.com/v2/resize:fit:470/format:webp/1*b9egePIDCAFs2MHLyk7wUA.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1532/format:webp/1*VyizEEd0CJ5QhlONzW5X1Q.png)
@@ -311,8 +314,12 @@ Elasticsearch 엔진은 GCP에서 제공하는 Elastic Cloud 서비스를 이용
 ![captionless image](https://miro.medium.com/v2/resize:fit:1740/format:webp/1*bVUm5Jl0ntMIY38EzURt3A.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:262/format:webp/1*lIFNAznaRll3gEEo0VcXWQ.png)
 --- | ---
 
-인스턴스 스펙: vCPU 5개, Memory 4GB
+인스턴스 스펙:
+
+vCPU 5개, Memory 4GB
+
 KIBANA를 위한 1GB 메모리 무료 제공
+
 총 비용: 1시간 0.3321$ -> 0.3321 * 24 * 30 = 239$ = 345,594원(환율 1446원)
 
 현재 프로젝트의 클라우드 서버를 구성한 NCP도 Search Engine Service라는 서비스를 제공하지만, 이상하게 클러스터 접속이 안 되는 문제가 계속 발생했습니다.
@@ -338,6 +345,7 @@ Elasticsearch 엔진을 이용한 3번째 테스트.
 테스트 결과를 보면 MySQL의 전문 검색을 이용한 product 단일 조회(connection timeout 에러 제거한 경우)에 비해서
 
 평균 TPS: 1.9 -> 192.5 (약 100배 이상 향상)
+
 응답 시간: 대략 1분 -> 1초 미만 (1/60 이상 줄어듬)
 
 와 같은 결과가 나타났습니다.
@@ -489,7 +497,9 @@ public class ProductSearchService {
 ![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*2rHS7a4UvAVFWmQIBlw_CA.png)![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*wbpnBXwrK6MdI0-lCz7gdQ.png)
 
 TPS: 185.6
+
 평균 응답 시간: 968ms(Grafana 기준)~1399ms(nGrinder 기준)
+
 (단독 조회 테스트에 비해 모두 300ms 정도 증가)
 
 ![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*bJpJkMvxGWdLUzly4Hdfaw.png)
@@ -501,7 +511,9 @@ TPS: 185.6
 전문 검색만을 이용할 때 가볍게 100%을 찍던 MySQL 서버의 CPU 사용량도 15% 내외로 줄어들었습니다.
 
 최종 결과
+
 평균 TPS: 1.9 -> 185.6 (약 100배 이상 향상)
+
 응답 시간: 대략 1분 -> 1초 (Grafana 대시보드 기준 1/60 이상 줄어듬)
 
 정리.
