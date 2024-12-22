@@ -90,7 +90,7 @@ H2 는 위와 같이 **첫번째 쿼리**를 실행하는 것으로 MEMBER_ID 3�
 
 3번과 같은 escaped string JSON 형식을 [H2 에서는 **JSON String** 이라고 부르는 것으로 보입니다.](https://github.com/h2database/h2database/issues/3417#issuecomment-1027681852)
 
-```
+```sql
 INSERT INTO MEMBER(USERNAME, ADDRESS) VALUES(?, ?);
 INSERT INTO MEMBER(USERNAME, ADDRESS) VALUES(?, ? FORMAT JSON);
 ```
