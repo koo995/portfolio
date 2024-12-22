@@ -111,10 +111,13 @@ CREATE TABLE diet_tag (
 (Prometheus와 Grafana만 제외하고…)
 
 Target 애플리케이션 서버의 인스턴스 스펙: vCPU 2EA, Memory 8GB
+
 Target MySQL 인스턴스 스펙: vCPU 2EA, Memory 8GB
 
 모니터링 인스턴스 스펙: vCPU 2EA, Memory 8GB
+
 nGrinder Controller 인스턴스 스펙: vCPU 2EA, Memory 8GB
+
 nGrinder Agent 인스턴스 스펙: vCPU 2EA, Memory 8GB
 
 3. 테스트 시나리오.
