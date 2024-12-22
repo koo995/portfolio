@@ -39,10 +39,13 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
+
     @Column
     private String username;
+
     @Column(nullable = false)
     private String email;
+
     @Column
     private String uid;
 ```
@@ -54,6 +57,7 @@ uid 필드는 Firebase 가 사용자를 식별하기 위해 제공하는 id 값�
 
 ```java
 public class FirebaseTokenInterceptor implements HandlerInterceptor {
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // 헤더값 추출
@@ -73,6 +77,7 @@ public class FirebaseTokenInterceptor implements HandlerInterceptor {
         }
         return header.split(" ")[1];
     }
+
     // firebase 서버에 토큰을 보내어 검증합니다.
     private static FirebaseToken decodeToken(String token) {
         FirebaseToken decodedToken;
@@ -99,6 +104,7 @@ Firebase 서버에 해당 토큰을 보내어 유효한지 검증합니다.
 @RequiredArgsConstructor
 public class LoginMemberArgResolver implements HandlerMethodArgumentResolver {
     private final MemberRepository memberRepository;
+
     // @Login 애너테이션이 있으면 값을 주입한다.
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -106,6 +112,7 @@ public class LoginMemberArgResolver implements HandlerMethodArgumentResolver {
         boolean hasMemberType = Member.class.isAssignableFrom(parameter.getParameterType());
         return hasLoginAnnotation && hasMemberType;
     }
+
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
       HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
@@ -120,6 +127,7 @@ public class LoginMemberArgResolver implements HandlerMethodArgumentResolver {
 @Service
 public class AuthService {
     private final MemberRepository memberRepository;
+
     public Member joinAndLogin(FirebaseToken decodedToken) throws InterruptedException {
         String uid = decodedToken.getUid();
         // uid 로 멤버를 조회하고 DB에 등록되어 있지 않은 uid 라면,
@@ -187,6 +195,7 @@ ArgumentResolver 은 위와 같이 컨트롤러의 매개변수에 @Login 애너
 @Service
 public class AuthService {
     private final MemberRepository memberRepository;
+
     public Member joinAndLogin(FirebaseToken decodedToken) throws InterruptedException {
         String uid = decodedToken.getUid();
         // uid 로 멤버를 조회하고 DB에 등록되어 있지 않은 uid 라면,
@@ -336,6 +345,7 @@ SELECT * FROM MEMBER WHERE uid="ASDW12SD3" FOR SHARE;  // 읽기 잠금
 @Service
 public class AuthService {
     private final MemberRepository memberRepository;
+
     // synchronized 적용
     public synchronized Member joinAndLogin(FirebaseToken decodedToken) throws InterruptedException {
         String uid = decodedToken.getUid();
@@ -377,12 +387,15 @@ implementation "org.springframework.retry:spring-retry"
 ```java
 @EnableRetry // 이 부분 추가
 @SpringBootApplication
-public class FirebaseApplication {}
-/.../
+public class FirebaseApplication {
+    /.../
+}
+
 @RequiredArgsConstructor
 @Service
 public class AuthService {
     private final MemberRepository memberRepository;
+
     // 요 부분도 추가!
     @Retryable(
             retryFor = {DataIntegrityViolationException.class},
