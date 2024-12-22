@@ -44,22 +44,27 @@
 
   리팩터링 과정에서 생산성 향상과 애플리케이션의 구조의 안정성을 위해 테스트 코드를 작성. JaCoCo 기준으로 테스트 커버리지 80% 이상을 유지했으며, 테스트 코드 작성이 어려운 경우에는 기존 애플리케이션 코드 구조의 문제점을 파악하고 리팩터링을 진행.
 
-* 향후 JPA로 변경을 고려하여 영속성 계층의 의존성을 역전시켜 구현
-
-  서비스 레이어가 영속성 문제에 독립적으로 동작하도록 인터페이스 기반의 간접 계층을 추가. 이를 통해 영속성 계층의 리팩터링이 서비스 레이어에 영향을 주지 않도록 설계.
-
 * TestContainers를 도입한 테스트 환경 구축
 
   H2와 MySQL의 DB 엔진 차이로 인한 여러 이슈를 해결하기 위해 TestContainers를 도입하여 서버 환경과 동일한 테스트 환경을 구축. 특히 MySQL의 전문 검색 기능을 사용하는 테스트 코드는 H2에서 실행이 불가능했기 때문에 이러한 선택이 필요.
 
 ## Issues
 
-- 조회 쿼리의 전체 수행 시간 30배 향상
+- FullText Search을 사용하는 조회 쿼리의 실행 계획을 분석하고 구조를 개선하여 쿼리의 전체 수행 시간 30배 단축
   > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/query/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/query/README.md)]
   
   기존 쿼리 수행 시 약 3~4초가 소요되는 것을 확인. 실행 계획을 분석하여 문제점을 파악한 후, 쿼리 구조를 변경.
   그 결과, 쿼리의 수행 시간이 약 0.08초로 줄어들어 30배 이상의 성능 향상을 달성.
-    
+
+- 위의 쿼리를 사용한 API의 문제점을 발견하고 리팩터링과 Elasticsearch 도입으로 TPS 1.9에서 185.6으로 100배 개선
+  > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/es/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/es/README.md)]
+
+  문제의 정의를 조금 더 확장함. 개선하고자 하는 것은 쿼리 튜닝을 통해서 쿼리의 성능을 향상시키는 것이 아니라 해당 쿼리를 사용하는 API의 성능을 향상시키는 것.
+
+  이에 API의 성능을 측정하기 위한 도구로 nGrinder와 모니터링 도구를 구성. 그러나 테스트 결과 100만개의 데이터에서 전문 검색은 성능 저하가 심각함. 따라서 Elasticsearch엔진을 도입
+
+  또한 기존의 쿼리에는 비즈니스 로직이 포함되어 있어 가독성과 재사용성이 떨어지는 문제가 존재. 이를 개선하기 위해 비즈니스 로직을 분리하여 서비스 계층에서 조합하도록 리팩터링.
+  
 - Spring Data JDBC(또는 JPA)에서 DB 엔진에 따른 데이터 타입의 변환 차이 이슈
   >[자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/converter/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/converter/README.md)]
     
