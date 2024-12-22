@@ -1,7 +1,7 @@
 # 구건홍 | 포트폴리오
 
 # Nutri-Diary(개인 프로젝트)
-> 기술 스택: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, NCP(Naver Cloud Platform), Jenkins
+> 기술 스택: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, Elasticsearch, NCP(Naver Cloud Platform), Jenkins, Grafana, Prometheus, nGrinder
 > 
 > GitHub: [https://github.com/f-lab-edu/nutri-diary](https://github.com/f-lab-edu/nutri-diary)
 
