@@ -42,6 +42,7 @@ public class Member {
     private Long id;
     private String username;
     private Address address;
+
     public Member(String username, Address address) {
         this.username = username;
         this.address = address;
@@ -54,6 +55,7 @@ public class Address {
     private String city;
     private String state;
     private String zip;
+
     public Address(String street, String city, String state, String zip) {
         this.street = street;
         this.city = city;
@@ -182,6 +184,7 @@ Data JDBC 는 컨버터(DB source value -> Address)를 선택할 때, DB 에서 
 @ReadingConverter
 public class JsonToAddressConverter implements Converter<String, Address> {
     private final ObjectMapper objectMapper;
+
     @Override
     public Address convert(String source) {
         try {
@@ -224,6 +227,7 @@ Data JDBC 는 연결된 DB의 Driver 에게 타입을 묻는 반면, JPA 는 변
 @Converter(autoApply = true)
 public class AddressConverter implements AttributeConverter<Address, String> {
     private final ObjectMapper objectMapper;
+
     @Override
     public String convertToDatabaseColumn(Address address) {
         try {
@@ -233,6 +237,7 @@ public class AddressConverter implements AttributeConverter<Address, String> {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public Address convertToEntityAttribute(String source) {
         try {
