@@ -56,6 +56,7 @@ CREATE TABLE product (
     FULLTEXT INDEX fulltext_idx (product_name, product_corp) WITH PARSER ngram
 );
 ```
+
 ```sql
 # 1000만개의 데이터
 CREATE TABLE review (
@@ -68,6 +69,7 @@ CREATE TABLE review (
 );
 CREATE INDEX idx_product_id ON review (product_id);
 ```
+
 ```sql
 # 2000만개의 데이터
 CREATE TABLE product_diet_tag (
@@ -79,6 +81,7 @@ CREATE TABLE product_diet_tag (
 );
 CREATE INDEX idx_product_id ON product_diet_tag (product_id);
 ```
+
 ```sql
 # 10개의 데이터
 CREATE TABLE diet_tag (
@@ -88,21 +91,21 @@ CREATE TABLE diet_tag (
     updated_at DATETIME NOT NULL
 );
 ```
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*9ttty12Dwj73SNCmhCPc6A.png" width=70%>
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*9ttty12Dwj73SNCmhCPc6A.png)
 
 현재 MySQL DB에는
 
-* product 테이블 130만 rows
-* review 테이블 1000만 rows
-* product_diet_tag 테이블 2000만 rows
-* diet_tag 테이블 10개의 rows
+*   product 테이블 130만 rows
+*   review 테이블 1000만 rows
+*   product_diet_tag 테이블 2000만 rows
+*   diet_tag 테이블 10개의 rows
 
 저장되어 있습니다.
 
 2. 모니터링과 nGrinder을 위한 클라우드 구축.
 -------------------------------
 
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*k17uYzbmiL3FGP6vnMS5mw.png" width=70%>
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*k17uYzbmiL3FGP6vnMS5mw.png)
 
 최적의 리소스를 할당하기 위해 서버를 각각의 인스턴스에 띄웠습니다.
 (Prometheus와 Grafana만 제외하고…)
@@ -119,7 +122,7 @@ nGrinder Agent 인스턴스 스펙: vCPU 2EA, Memory 8GB
 
 부하 테스트는 5분동안 진행하였고 가상 유저는 최대 300명으로 아래의 이미지처럼 30초마다 점진적으로 증가시켰습니다.
 
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*chqRPEBYoybFKStwhMaJNg.png" width=70%>
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*chqRPEBYoybFKStwhMaJNg.png)
 
 API 호출 시나리오에서는 검색 키워드를 랜덤한 숫자나 문자열로 다양하게 적용하고, size값을 10으로 고정했으며, page값은 1만이하의 랜덤값을 사용했습니다.
 
@@ -169,24 +172,21 @@ public class JdbcTemplateProductSearchRepository {
 }
 ```
 
-<p align="center">
-    <img src="https://miro.medium.com/v2/resize:fit:474/format:webp/1*sL1B-jcQ7G6v-CepOqPUJQ.png" width=30%>
-    <img src="https://miro.medium.com/v2/resize:fit:1528/format:webp/1*8-4unalVeI1Iza9dBqsMaQ.png" width=70%>
-</p>
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*i2YpvBsr5ciQJttT9DhZcw.png" width=70%>
+![captionless image](https://miro.medium.com/v2/resize:fit:474/format:webp/1*sL1B-jcQ7G6v-CepOqPUJQ.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1528/format:webp/1*8-4unalVeI1Iza9dBqsMaQ.png)
+--- | ---
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*i2YpvBsr5ciQJttT9DhZcw.png)
 
 테스트의 결과는 매우 심각했습니다.
 
 평균 TPS(Transaction Per Second)가 2.1 나왔고, 응답 시간은 점점 늦어져 30초가 나왔습니다. 또한 에러율이 51.3%가 나왔습니다.
 
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*8dQKK3sSJ1qoTVRA_8l6_g.png" width=70%>
+![captionless image](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*8dQKK3sSJ1qoTVRA_8l6_g.png)
 
 에러의 원인은 애플리케이션 로그를 확인해보니 connection timeout 에러가 발생했습니다. 이는 HikariCP 커넥션 풀의 모든 커넥션이 사용 중인 상황에서, 새로운 커넥션을 얻기 위한 대기 시간이 HikariCP의 기본 설정값 30초를 초과했기 때문입니다.
 
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:1000/format:webp/1*ReIpQZ46eLlUPTijBDapnA.png" width=40%>
-    <img src="https://miro.medium.com/v2/resize:fit:1000/format:webp/1*J0pegVVmhg94vCZC0DJfqg.png" width=40%>
-</figure>
+![captionless image](https://miro.medium.com/v2/resize:fit:1000/format:webp/1*ReIpQZ46eLlUPTijBDapnA.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1000/format:webp/1*J0pegVVmhg94vCZC0DJfqg.png)
+--- | ---
 
 NCP에서 제공하는 DB 인스턴스 모니터링을 통해 문제를 분석한 결과, CPU 사용량이 최대치에 도달했으며 이것이 성능 병목지점임을 확인했습니다.
 
@@ -195,11 +195,10 @@ NCP에서 제공하는 DB 인스턴스 모니터링을 통해 문제를 분석�
 
 API의 실제 성능을 측정하기 위해 HikariCP의 connection_timeout을 300초로 변경한 후, 커넥션 획득 타임 아웃 에러가 발생하지 않는 테스트를 진행했습니다.
 
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:476/format:webp/1*AL3fEPpR-40MEGEgCKXizg.png" width=20%>
-    <img src="https://miro.medium.com/v2/resize:fit:1526/format:webp/1*qYcYVxchiUsholskUrgUJA.png" width=65%>
-    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*gVPBnfwIYzBSBzqzCJv3zQ.png" width=80%>
-</figure>
+![captionless image](https://miro.medium.com/v2/resize:fit:476/format:webp/1*AL3fEPpR-40MEGEgCKXizg.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1526/format:webp/1*qYcYVxchiUsholskUrgUJA.png)
+--- | ---
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*gVPBnfwIYzBSBzqzCJv3zQ.png)
 
 API의 응답은 모두 성공하였지만, 평균 TPS(Transaction Per Second)가 1.9 나왔고, 응답 시간은 점점 늦어져 최대 1.79분이 나왔습니다.
 
@@ -210,14 +209,11 @@ API의 응답은 모두 성공하였지만, 평균 TPS(Transaction Per Second)�
 첫 번째 Scale Up: vCPU 8EA, Memory 32GB
 두 번째 Scale Up: vCPU 32EA, Memory 128GB
 
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:470/format:webp/1*b9egePIDCAFs2MHLyk7wUA.png" width=20%>
-    <img src="https://miro.medium.com/v2/resize:fit:1532/format:webp/1*VyizEEd0CJ5QhlONzW5X1Q.png" width=65%>
-    <img src="https://miro.medium.com/v2/resize:fit:726/format:webp/1*xYMAfZqzcksO-mLKNECojQ.png" width=30%>
-    <img src="https://miro.medium.com/v2/resize:fit:1276/format:webp/1*2l3j3lRFaOJMZPSmG-RodA.png" width=60%>
-</figure>
+![captionless image](https://miro.medium.com/v2/resize:fit:470/format:webp/1*b9egePIDCAFs2MHLyk7wUA.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1532/format:webp/1*VyizEEd0CJ5QhlONzW5X1Q.png)
+--- | ---
 
-
+![captionless image](https://miro.medium.com/v2/resize:fit:726/format:webp/1*xYMAfZqzcksO-mLKNECojQ.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1276/format:webp/1*2l3j3lRFaOJMZPSmG-RodA.png)
+--- | ---
 
 테스트 결과, 두 번째 Scale Up 스펙(vCPU 32EA, Memory 128GB)으로 테스트를 진행해도 평균 TPS 10, 응답 시간이 평균 15초가 걸렸습니다.
 다만 CPU 사용량은 30%까지 감소했습니다.
@@ -245,10 +241,8 @@ WHERE MATCH(p.product_name, p.product_corp) AGAINST(:keyword)
 LIMIT :offset, :limit;
 ```
 
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:444/format:webp/1*8qJFkn2icTeYEAmMs1Mcyw.png" width=20%>
-    <img src="https://miro.medium.com/v2/resize:fit:1558/format:webp/1*YbjrgWC4xIajTE9NmRIssw.png" width=65%>
-</figure>
+![captionless image](https://miro.medium.com/v2/resize:fit:444/format:webp/1*8qJFkn2icTeYEAmMs1Mcyw.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1558/format:webp/1*YbjrgWC4xIajTE9NmRIssw.png)
+--- | ---
 
 예상했던 대로 테스트 결과는 처참했으며, 전문 검색을 단독으로 사용했을 때와 비교해봐도 크게 달라진 점이 없습니다.
 
@@ -274,7 +268,8 @@ MySQL 서버는 전문 검색 쿼리가 오면 인덱싱할 때와 동일하게 
 ```sql
 SELECT p.product_id, p.product_name, p.product_corp FROM product p WHERE MATCH (p.product_name, p.product_corp) AGAINST ('닭가슴살') LIMIT 2000, 10;
 ```
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*VH03J_JJXqka-LymM-uNzQ.png" width=90%>
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*VH03J_JJXqka-LymM-uNzQ.png)
 
 하지만 실제 내부적으로 계산되는 행의 수는 단순히 OFFSET과 LIMIT으로 지정한 개수만큼이 아닙니다.
 
@@ -285,11 +280,10 @@ MySQL은 전문 검색으로 매칭되는 모든 rows에 대해 가중치를 계
 실제로 OFFSET을 0으로 설정한 경우와 비교해보았으나 성능상 유의미한 차이는 없었고, 페이징을 위한 COUNT(*) 쿼리를 제거했을 때도 미미한 성능 개선만 있었습니다.
 (단순히 하나의 트랜잭션에서 2개의 쿼리가 나가던 것을 1개의 쿼리만 나가도록 바꾸니 성능이 대략 2배 정도 좋아지는 매우 당연한 현상…)
 
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:464/format:webp/1*i2GNyY5MwBDBoOq6jV4Quw.png" width=20%>
-    <img src="https://miro.medium.com/v2/resize:fit:1538/format:webp/1*Cy1jzImjlqR23S9msNbr5g.png" width=65%>
-    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*57nSqZfrQM7fvlfuY05B9g.png" width=70%>
-</figure>
+![captionless image](https://miro.medium.com/v2/resize:fit:464/format:webp/1*i2GNyY5MwBDBoOq6jV4Quw.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1538/format:webp/1*Cy1jzImjlqR23S9msNbr5g.png)
+--- | ---
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*57nSqZfrQM7fvlfuY05B9g.png)
 
 TPS: 2.1 -> 3.7
 
@@ -311,10 +305,8 @@ Elasticsearch 엔진을 도입.
 Elasticsearch 엔진은 GCP에서 제공하는 Elastic Cloud 서비스를 이용.
 ---------------------------------------------------
 
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:1740/format:webp/1*bVUm5Jl0ntMIY38EzURt3A.png" width=75%>
-    <img src="https://miro.medium.com/v2/resize:fit:262/format:webp/1*lIFNAznaRll3gEEo0VcXWQ.png" width=22%>
-</figure>
+![captionless image](https://miro.medium.com/v2/resize:fit:1740/format:webp/1*bVUm5Jl0ntMIY38EzURt3A.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:262/format:webp/1*lIFNAznaRll3gEEo0VcXWQ.png)
+--- | ---
 
 인스턴스 스펙: vCPU 5개, Memory 4GB
 KIBANA를 위한 1GB 메모리 무료 제공
@@ -333,11 +325,10 @@ NCP는 Search Engine Service 클러스터를 구성하는데 최소 4대의 인�
 Elasticsearch 엔진을 이용한 3번째 테스트.
 ==============================
 
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:502/format:webp/1*iw3BTCPEiFVAHw20W02gvg.png" width=20%>
-    <img src="https://miro.medium.com/v2/resize:fit:1500/format:webp/1*h23MsP2eqHoDmZhZE4KjKw.png" width=65%>
-    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*KFkJOmtwjf-y4_50-LlJSA.png" width=70%>
-</figure>
+![captionless image](https://miro.medium.com/v2/resize:fit:502/format:webp/1*iw3BTCPEiFVAHw20W02gvg.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1500/format:webp/1*h23MsP2eqHoDmZhZE4KjKw.png)
+--- | ---
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*KFkJOmtwjf-y4_50-LlJSA.png)
 
 위의 테스트 결과는 리뷰 개수와 상위 태그 표시와 같은 요구사항이 적용되지 않은, product에 대한 단일 조회만을 테스트한 결과입니다.
 
@@ -362,7 +353,7 @@ Elasticsearch 엔진을 이용한 3번째 테스트.
 
 기존의 테이블 구성은 아래 이미지와 같습니다.
 
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*QL7bAGSi6n7ot-vkY-kneA.png" width=70%>
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*QL7bAGSi6n7ot-vkY-kneA.png)
 
 product와 diet_tag는 다대다 관계를 가지며, 중간에 product_diet_tag 테이블을 두어 각 product에 연관된 diet_tag를 저장합니다.
 
@@ -372,7 +363,7 @@ product와 diet_tag는 다대다 관계를 가지며, 중간에 product_diet_tag
 
 이러한 설계는 문제점이 있다고 판단하여 테이블 구조와 저장 프로세스의 개선이 필요하다고 생각했습니다.
 
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*Ew9khtq6ZiAucZdNOw40Eg.png" width=70%>
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*Ew9khtq6ZiAucZdNOw40Eg.png)
 
 사용자들이 review를 작성할때 product_diet_tag에 tag_count 필드를 만들어 해당 값을 증가시키면 데이터 용량을 훨씬 줄일 수 있습니다.
 
@@ -484,24 +475,25 @@ public class ProductSearchService {
 ===========
 
 이전 테스트와의 차이점은 테스트 시간을 15분으로 늘렸다는 점입니다. 앞선 테스트에서 요구사항이 없는 Elasticsearch 단독 테스트에서 이미 어느 정도 성능이 나오는 것을 확인했기에 조금 더 긴 시간 동안 테스트를 진행했습니다.
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*B-FyxCFjfhCdVRSvYVpOFA.png" width=70%>
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*B-FyxCFjfhCdVRSvYVpOFA.png)
 
 사용자는 점진적으로 증가하다 4분 정도 지난 후 300명을 유지했습니다.
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:494/format:webp/1*5-u1ENZnO_NVKbSTmQjUyQ.png" width=20%>
-    <img src="https://miro.medium.com/v2/resize:fit:1508/format:webp/1*MZkdHTIozb5Tw3Pgfqsh1w.png" width=65%>
-    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*2rHS7a4UvAVFWmQIBlw_CA.png" width=70%>
-    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*wbpnBXwrK6MdI0-lCz7gdQ.png" width=70%>
-</figure>
 
+![captionless image](https://miro.medium.com/v2/resize:fit:494/format:webp/1*5-u1ENZnO_NVKbSTmQjUyQ.png) | ![captionless image](https://miro.medium.com/v2/resize:fit:1508/format:webp/1*MZkdHTIozb5Tw3Pgfqsh1w.png)
+--- | ---
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*2rHS7a4UvAVFWmQIBlw_CA.png)![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*wbpnBXwrK6MdI0-lCz7gdQ.png)
 
 TPS: 185.6
 평균 응답 시간: 968ms(Grafana 기준)~1399ms(nGrinder 기준)
 (단독 조회 테스트에 비해 모두 300ms 정도 증가)
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*bJpJkMvxGWdLUzly4Hdfaw.png" width=70%>
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*bJpJkMvxGWdLUzly4Hdfaw.png)
 
 애플리케이션 테스트 서버의 CPU 사용량은 대략 30~40%정도로 증가했습니다.
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*gSWWbSRK5eYI65UYUCnQrA.png" width=60%>
+
+![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*gSWWbSRK5eYI65UYUCnQrA.png)
 
 전문 검색만을 이용할 때 가볍게 100%을 찍던 MySQL 서버의 CPU 사용량도 15% 내외로 줄어들었습니다.
 
