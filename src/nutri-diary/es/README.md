@@ -169,11 +169,11 @@ public class JdbcTemplateProductSearchRepository {
 }
 ```
 
-<figure class="half">
-    <img src="https://miro.medium.com/v2/resize:fit:474/format:webp/1*sL1B-jcQ7G6v-CepOqPUJQ.png" width=20%>
-    <img src="https://miro.medium.com/v2/resize:fit:1528/format:webp/1*8-4unalVeI1Iza9dBqsMaQ.png" width=60%>
-</figure>
-    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*i2YpvBsr5ciQJttT9DhZcw.png" width=80%>
+<p align="center">
+    <img src="https://miro.medium.com/v2/resize:fit:474/format:webp/1*sL1B-jcQ7G6v-CepOqPUJQ.png" width=30%>
+    <img src="https://miro.medium.com/v2/resize:fit:1528/format:webp/1*8-4unalVeI1Iza9dBqsMaQ.png" width=70%>
+</p>
+<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*i2YpvBsr5ciQJttT9DhZcw.png" width=70%>
 
 테스트의 결과는 매우 심각했습니다.
 
