@@ -96,15 +96,21 @@ JPA는 이 문제를 해결하기 위해서 연관관계에 있는 객체들을 
 ```java
 Long missionId = 1001L;
 Long speciesId = 9001L;
+
 Mission newMission = new Mission(missionId,"미션1"); // id, missionName
 Species newSpecies = new Species(speciesId, "종1");  // id, speciesName
 newMission.setSpecies(newSpecies);
+
 speciesRepository.save(newSpecies); // species 을 먼저 저장해야 한다. (외래키 제약조건)
 missionRepository.save(newMission);
+
 entityManager.clear();
+
 Mission mission = missionRepository.findById(missionId).get();
+
 String missionClassName = mission.getClass().getName();
 String speciesClassName = mission.getSpecies().getClass().getName();
+
 System.out.println("missionClassName = " + missionClassName);
 System.out.println("speciesClassName = " + speciesClassName);
 ```
@@ -116,8 +122,10 @@ Species 엔티티는 **프록시 객체**가 생성된 것을 확인할 수 있�
 
 ```java
 Species species = speciesRepository.findById(species.getId()).get();
+
 String speciesClassName = species.getClass().getName();
 String missionClassName = species.getMission().getClass().getName();
+
 System.out.println("speciesClassName = " + speciesClassName);
 System.out.println("missionClassName = " + missionClassName);
 ```
