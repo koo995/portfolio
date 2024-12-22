@@ -14,7 +14,7 @@
 
 프로젝트를 테스트하는 도중 아래의 그림과 같이 컨버터를 찾을 수 없다는 에러사항이 발생했습니다.
 
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*64n0TxkrPGhlo3EOkMkoHg.png" width=90%>
+<img src="https://github.com/user-attachments/assets/2f42ec0d-ae5f-4a48-a774-475ff3a94387" width=90%>
 
 저는 현재 Spring Data JDBC 을 사용하는 중이며, 혹시나 컨버터가 제대로 등록되지 않았는지 체크해 보았지만 컨버터는 제대로 등록되었습니다.
 
