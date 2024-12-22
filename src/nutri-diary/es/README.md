@@ -289,7 +289,7 @@ MySQL은 전문 검색으로 매칭되는 모든 rows에 대해 가중치를 계
 실제로 OFFSET을 0으로 설정한 경우와 비교해보았으나 성능상 유의미한 차이는 없었고, 페이징을 위한 COUNT(*) 쿼리를 제거했을 때도 미미한 성능 개선만 있었습니다.
 (단순히 하나의 트랜잭션에서 2개의 쿼리가 나가던 것을 1개의 쿼리만 나가도록 바꾸니 성능이 대략 2배 정도 좋아지는 매우 당연한 현상…)
 
-![captionless image](https://github.com/user-attachments/assets/4bb6bf14-3277-4e2d-af97-3cff962ba54a) | ![captionless image](https://miro.medium.com/v2/resize:fit:1538/format:webp/1*Cy1jzImjlqR23S9msNbr5g.png)
+![captionless image](https://github.com/user-attachments/assets/746caac4-b796-4fd6-b325-d4200160261b) | ![captionless image](https://miro.medium.com/v2/resize:fit:1538/format:webp/1*Cy1jzImjlqR23S9msNbr5g.png)
 --- | ---
 
 ![captionless image](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*57nSqZfrQM7fvlfuY05B9g.png)
