@@ -1,7 +1,7 @@
 [H2 Database] JSON 컬럼에 대한 Converter 에러 상황.
 ============================================
 
-이 글의 원글은 [여기](https://medium.com/@gunhong951/h2-database-json-%EC%BB%AC%EB%9F%BC%EC%97%90-%EB%8C%80%ED%95%9C-converter-%EC%97%90%EB%9F%AC-%EC%83%81%ED%99%A9-bedaa2ac3938)서 확인할 수 있습니다.
+혹시나 마크다운 문법이 보기 불편하시다면 원글에 해당하는 블로그 글은 [여기](https://medium.com/@gunhong951/h2-database-json-%EC%BB%AC%EB%9F%BC%EC%97%90-%EB%8C%80%ED%95%9C-converter-%EC%97%90%EB%9F%AC-%EC%83%81%ED%99%A9-bedaa2ac3938)서 확인할 수 있습니다.
 > 테스트 코드 실행 시 JSON 타입 컬럼값을 객체로 변환하지 못하는 문제가 발생. 상황을 구체적으로 파악하기 위해 Data JPA, Data JDBC, MySQL, H2를 각각 테스트한 결과, JPA에서도 유사한 문제가 발생.
 >
 > 원인을 파악하기 위해 디버깅을 진행하며 추적한 결과, 이는 H2가 JSON 타입의 컬럼을 MySQL과 다르게 처리해서 발생하는 문제로 발견. 문제의 근본 원인을 해결하기 위해 시도해 보았으나 실패.
