@@ -1,7 +1,7 @@
 API의 성능을 개선하기 위해선 어떻게 접근해야할까? (쿼리만 생각하면 될까?)
 ============================================
 
-본 포스팅은 개인 프로젝트[GitHub](https://github.com/f-lab-edu/nutri-diary)에서 발생한 내용이며 원본 글은 [여기](https://medium.com/@gunhong951/api의-성능을-개선하기-위해선-어떻게-접근해야할까-쿼리만-생각하면-될까-7a2033cacdaf)에서 확인하실 수 있습니다.
+본 포스팅은 개인 프로젝트[GitHub](https://github.com/f-lab-edu/nutri-diary)에서 발생한 내용이며, 혹시나 마크다운 문법이 보기 불편하시다면 원글에 해당하는 블로그 글은 [여기](https://medium.com/@gunhong951/api의-성능을-개선하기-위해선-어떻게-접근해야할까-쿼리만-생각하면-될까-7a2033cacdaf)에서 확인하실 수 있습니다.
 
 ---
 > 이전 글: [[MySQL] Left Join에서 Subquery로 변경 후 쿼리 성능 30배 향상하기.](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/query/README.md)
