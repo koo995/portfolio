@@ -1,7 +1,7 @@
 [Spring] Firebase을 이용한 인증과정에서 동시성 문제 발생. (Feat. 애플리케이션 레벨의 원자성과 DB 트랜잭션의 원자성은 별개다.)
 =====================================================================================
 
-이 글의 원본은 [여기](https://medium.com/@gunhong951/spring-프로젝트에서-interceptor-와-argumentresolver-로-firebase-인증을-구현할-때-transactional과-unique-제약조건에-유의하자-e250b121c14e)에서 확인하실 수 있습니다.
+혹시나 마크다운 문법이 보기 불편하시다면 원글에 해당하는 블로그 글은 [여기](https://medium.com/@gunhong951/spring-프로젝트에서-interceptor-와-argumentresolver-로-firebase-인증을-구현할-때-transactional과-unique-제약조건에-유의하자-e250b121c14e)에서 확인하실 수 있습니다.
 
 > 인증 과정에서 중복 회원가입으로 인한 API 실행 에러가 발생. 중복 문제는 유니크 제약조건을 적용하여 간단히 해결할 수 있었지만, 이 과정에서 트랜잭션이 적용되지 않은 코드를 발견.
 >
