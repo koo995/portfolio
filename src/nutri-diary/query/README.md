@@ -1,7 +1,7 @@
 [MySQL] Left Join에서 Subquery로 변경 후 쿼리 성능 30배 향상하기.
 ====================================================
 
-본 포스팅은 개인 프로젝트[[GitHub](https://github.com/f-lab-edu/nutri-diary)]에서 발생한 내용이며, 혹시나 마크다운 문법이 보기 불편하시다면 원글에 해당하는 블로그 글은 [여기](https://medium.com/@gunhong951/%EC%A0%84%EB%AC%B8%EA%B2%80%EC%83%89-%EA%B3%BC%EC%97%B0-%EB%8D%94-%EB%B9%A0%EB%A5%B8%EA%B0%80-3db2e3fa0c89)서 확인하실 수 있습니다.
+본 포스팅은 개인 프로젝트[[GitHub](https://github.com/f-lab-edu/nutri-diary)]에서 발생한 내용이며, 혹시나 마크다운 문법이 보기 불편하시다면 원글에 해당하는 블로그 글을 [여기](https://medium.com/@gunhong951/%EC%A0%84%EB%AC%B8%EA%B2%80%EC%83%89-%EA%B3%BC%EC%97%B0-%EB%8D%94-%EB%B9%A0%EB%A5%B8%EA%B0%80-3db2e3fa0c89)서 확인하실 수 있습니다.
 > 기존 쿼리 수행 시 약 3~4초가 소요. 실행 계획을 분석하여 문제점을 파악한 후, 쿼리 구조를 변경.
 >
 > 그 결과, 쿼리의 수행 시간이 약 0.08초로 줄어들어 30배 이상의 성능 향상을 달성.
