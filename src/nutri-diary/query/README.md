@@ -62,12 +62,16 @@ LIMIT 1, 20;
 하지만 위의 쿼리를 적용하고 테스트를 해봤을 때 3913(ms)초의 시간이 걸리는 만큼 심각하게 느린 속도를 보입니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*8Zs2U9qbPE92nNJi2Uaw9w.png" width=70%>
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*86YKH_qfed7f2WTFFmwwiQ.png" width=90%>
+<img src="https://github.com/user-attachments/assets/64003437-7245-499d-89b8-e260f8dac41d" width=90%>
 
-실행 순서는 다음 기준으로 읽으면 됩니다.
+실행 순서는 빨간 번호 순이며, 다음 기준으로 읽으면 됩니다.
 
-*   들여쓰기가 같은 레벨에서는 상단에 위치한 라인이 먼저 실행.
-*   들여쓰기가 다른 레벨에서는 가장 안쪽에 위치한 라인이 먼저 실행.
+* 들여쓰기( -> 모양의 화살표)가 같은 들여쓰기 레벨에서는 상단에 위치한 라인이 먼저 실행.
+
+  (2번과 6번 중에서 2번이 먼저 실행)
+* 들여쓰기가 다른 레벨에서는 가장 오른쪽에 위치한 라인이 먼저 실행.
+
+  (2번과 1번 중에서 1번이 먼저 실행)
 
 제일 첫 실행 작업인 “Full-text index search on p using fulltext_idx” 기준으로 실행계획의 용어들을 설명하면
 
