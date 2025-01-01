@@ -281,7 +281,34 @@ ObjectMapper 은 이런 String 리터럴(escaping 된 문자열을 한번 더 �
 
 저의 경우는 두번째 방법을 선택했는데, 첫번째 방법인 Profile을 분리하여 H2용의 컨버터를 생성하는 방법은 추후 관리가 복잡해질 우려가 있다고 판단했습니다. 만약 DB에 JSON으로 변환해서 관리해야 할 클래스가 많아질수록 그 클래스들에 대해 모두 별도의 테스트용 컨버터를 준비해야 합니다. 따라서 저는 H2와 MySQL 모두에게서 dialect차이를 타협할 방법을 원했기에 Text타입으로 저장하는 두번째 방법을 선택했습니다.
 
-한편, JPA 에서는 2021년 MySQL, Oracle, PostgreSQL, H2 와 같은 DB를 사용할 때 JSON 타입 변환을 가능하게 한 [hypersistence-utils](https://github.com/vladmihalcea/hypersistence-utils) 를 Vlad Mihalcea(알고보니 Hibernate 진영에서 매우 유명하신 분..!)님이 만들어 주셨습니다. 아직 이 코드를 분해해 보지는 않았지만, JSON 데이터를 INSERT 할 때 어떤 방법을 적용했는지 힌트를 얻을 수 있지 않을까 생각해서 추후 시도해 보겠습니다.
+한편, JPA 에서는 2021년 MySQL, Oracle, PostgreSQL, H2 와 같은 DB를 사용할 때 JSON 타입 변환을 가능하게 한 [hypersistence-utils](https://github.com/vladmihalcea/hypersistence-utils) 를 Vlad Mihalcea님이 만들어 주셨습니다.
+
+```java
+@Getter
+@NoArgsConstructor
+@ToString
+@Table(name = "MEMBER")
+@Entity
+public class JpaMember {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MEMBER_ID")
+    private Long id;
+
+    private String username;
+
+    @Type(JsonType.class) // 이 애너테이션 하나 달아주면 H2에 JSON 타입으로 저장
+    @Convert(converter = AddressConverter.class)
+    private Address address;
+
+    public JpaMember(String username, Address address) {
+        this.username = username;
+        this.address = address;
+    }
+}
+```
+
+아직 이 코드를 분해해 보지는 않았지만, JSON 데이터를 INSERT 할 때 어떤 방법을 적용했는지 힌트를 얻을 수 있지 않을까 생각해서 추후 시도해 보겠습니다.
 
 아래의 링크를 참고해주세요!
 
