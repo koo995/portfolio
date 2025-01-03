@@ -26,6 +26,7 @@ API의 요구 사항으로는 product 테이블을 검색할 때, 검색 결과 
 외래키는 사용하지 않았고 대신 인덱스는 별도로 설정했습니다.
 
 ```sql
+# ngram 분석 알고리즘을 활용하는 전문 검색 인덱스 생성
 CREATE TABLE product (
     product_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     product_name VARCHAR(255) NOT NULL,
