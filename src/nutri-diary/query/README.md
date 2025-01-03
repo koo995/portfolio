@@ -88,7 +88,10 @@ LIMIT 1, 20;
 이 부분에서는 26개의 레코드를 가져오는데 평균 22(ms)가 걸리는 만큼 성능 저하에 영향을 미치지 않습니다.
 
 그리고 review 테이블에서 Covering index scan을 수행하는데
-이때, 테이블에서 읽은 rows가 1000만개(10e+6)이고 마지막 row를 가져오는데 걸린 시간이 무려 3220(ms)나 걸렸습니다. GROUP BY product_id와 count()을 활용하여 review의 갯수를 집계할 때, 앞선 작업에서 모든 인덱스를 탐색하느라 시간이 많이 소모되었습니다.
+
+이때, 테이블에서 읽은 rows가 1000만개(10e+6)이고 마지막 row를 가져오는데 걸린 시간이 무려 3220(ms)나 걸렸습니다.
+
+GROUP BY product_id와 count()을 활용하여 연관된 review의 갯수를 집계할 때, 앞선 작업에서 모든 review의 product_id 인덱스를 탐색하느라 시간이 많이 소모되었습니다.
 
 이후 리뷰 갯수에 대한 집계연산을 수행하고 LEFT JOIN을 처리하는데 대략 4418(ms)의 시간이 걸렸습니다.
 (EXPLAIN ANALYZE을 사용해서 실제 쿼리보다 시간이 조금 더 걸렸습니다.)
@@ -113,7 +116,7 @@ LEFT JOIN 안에 있던 서브쿼리를 바깥으로 빼내고 review 테이블�
 하지만 여전히 쿼리가 3642(ms)정도로 매우 낮은 성능을 보였습니다.
 
 <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*VCbLuss8sfQzfCKTaS7l1Q.png" width=70%>
-<img src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*oQai6VZIHHRQMyWe4xTR-w.png" width=90%>
+<img src="https://github.com/user-attachments/assets/ebd56de2-d60b-4a31-bdff-666aba232598" width=90%>
 
 다시 실행계획을 분석해 보았을 때, 예상한 대로 전문 검색으로 탐색된 product의 레코드에 대해서만 review 테이블을 탐색하는 것을 볼 수 있습니다.
 
@@ -127,7 +130,7 @@ product 한개당 읽어온 review 레코드는 평균 10개로 Nested loop left
 
 이 부분을 GPT를 이용해서 찾아보았고 답변은 아래와 같습니다.
 
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*xCM50xog0IYEdLU49Zqyjg.png" width=50%>
+<img src="https://github.com/user-attachments/assets/63e28762-4077-4f05-ae09-dcd89e224e17" width=50%>
 
 변경 전 쿼리는 limit 최적화가 이루어져서 필요한 레코드의 갯수만 읽은 것으로 추정됩니다.
 
