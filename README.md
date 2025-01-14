@@ -1,7 +1,7 @@
 # 구건홍 | 포트폴리오
 
 # Nutri-Diary(개인 프로젝트)
-> 기술 스택: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, Elasticsearch, NCP(Naver Cloud Platform), Jenkins, TestContainers, Grafana, Prometheus, nGrinder
+> 기술 스택: Spring Boot, Spring Data JDBC, JdbcTemplate, MySQL, Elasticsearch, NCP(Naver Cloud Platform), Jenkins, Grafana, Prometheus, nGrinder
 > 
 > GitHub: [https://github.com/f-lab-edu/nutri-diary](https://github.com/f-lab-edu/nutri-diary)
 
@@ -38,25 +38,20 @@
 
 * CI/CD와 무중단 배포 인프라 구성
 
-  Jenkins 서버를 별도로 구축하여 개발 과정의 CI/CD를 수행하고, NCP의 SourceDeploy(AWS의 CodeDeploy와 유사)를 활용해 Auto Scaling Group에 Blue/Green 방식의 무중단 배포 인프라를 구성. 
+  Jenkins 서버를 별도로 구축하여 개발 과정의 CI/CD를 수행하고, NCP의 SourceDeploy(AWS의 CodeDeploy와 유사)를 활용해 Auto Scaling Group에 Blue/Green 방식의 무중단 배포 인프라를 구성하여 배포 자동화. 
 
 * JUnit을 활용한 테스트 코드 작성
 
   리팩터링 과정에서 생산성 향상과 애플리케이션의 구조의 안정성을 위해 테스트 코드를 작성. JaCoCo 기준으로 테스트 커버리지 80% 이상을 유지했으며, 테스트 코드 작성이 어려운 경우에는 기존 애플리케이션 코드 구조의 문제점을 파악하고 리팩터링을 진행.
 
-* TestContainers를 도입한 테스트 환경 구축
 
-  H2와 MySQL의 DB 엔진 차이로 인한 여러 이슈를 해결하기 위해 TestContainers를 도입하여 서버 환경과 동일한 테스트 환경을 구축. 특히 MySQL의 전문 검색 기능을 사용하는 테스트 코드는 H2에서 실행이 불가능했기 때문에 이러한 선택이 필요.
-
-## Issues
-
-- FullText Search을 사용하는 조회 쿼리의 실행 계획을 분석하고 구조를 개선하여 쿼리의 전체 수행 시간 30배 단축
+* FullText Search을 사용하는 조회 쿼리의 실행 계획을 분석하고 구조를 개선하여 쿼리의 전체 수행 시간 30배 단축
   > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/query/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/query/README.md)]
   
   기존 쿼리 수행 시 약 3~4초가 소요되는 것을 확인. 실행 계획을 분석하여 문제점을 파악한 후, 쿼리 구조를 변경.
   그 결과, 쿼리의 수행 시간이 약 0.08초로 줄어들어 30배 이상의 성능 향상을 달성.
 
-- 위의 쿼리를 사용한 API의 문제점을 발견하고 리팩터링과 Elasticsearch 도입으로 TPS 1.9에서 185.6으로 100배 개선
+* 위의 쿼리를 사용한 API의 문제점을 발견하고 리팩터링과 Elasticsearch 도입으로 TPS 1.9에서 185.6으로 100배 개선
   > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/es/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/es/README.md)]
 
   문제의 정의를 조금 더 확장함. 개선하고자 하는 것은 쿼리 튜닝을 통해서 쿼리의 성능을 향상시키는 것이 아니라 해당 쿼리를 사용하는 API의 성능을 향상시키는 것.
@@ -65,16 +60,16 @@
 
   또한 기존의 쿼리에는 비즈니스 로직이 포함되어 있어 가독성과 재사용성이 떨어지는 문제가 존재. 이를 개선하기 위해 비즈니스 로직을 분리하여 서비스 계층에서 조합하도록 리팩터링.
   
-- Spring Data JDBC(또는 JPA)에서 DB 엔진에 따른 데이터 타입의 변환 차이 이슈
+* Spring Data JDBC(또는 JPA)에서 DB 엔진에 따른 데이터 타입의 변환 차이 이슈
   >[자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/nutri-diary/converter/README.md](https://github.com/koo995/portfolio/blob/main/src/nutri-diary/converter/README.md)]
     
   테스트 코드 실행 시 JSON 타입 컬럼값을 객체로 변환하지 못하는 문제가 발생. 상황을 구체적으로 파악하기 위해 여러 케이스를 테스트하는 도중 JPA에서도 유사한 문제가 발생.
   
-  문제의 원인을 파악하기 위해 디버깅을 진행하며 추적한 결과, 이는 H2가 JSON 타입의 컬럼을 MySQL과 다르게 처리해서 발생하는 문제로 확인. 여러 방안을 검토하며 테스트용 컨버터를 만들거나 JSON 타입 대신 TEXT 타입을 사용하는 방법을 고려했고, 최종적으로 TestContainers를 도입하여 해결.
+  문제의 원인을 파악하기 위해 디버깅을 진행하며 추적한 결과, 이는 H2가 JSON 타입의 컬럼을 MySQL과 다르게 처리해서 발생하는 문제로 확인. 여러 방안을 검토하며 테스트용 컨버터를 만들기, TestContainers를 도입, JSON 타입 대신 TEXT 타입을 사용하는 방법 중에서 마지막 방법을 최종적으로 선택.
 
   JPA를 사용하는 경우 hypersistence-utils 라이브러리가 문제를 해결.
     
-- 단순한 비즈니스 로직의 과도한 복잡성을 개선하여 간결한 구조로 리팩터링
+* 단순한 비즈니스 로직의 과도한 복잡성을 개선하여 간결한 구조로 리팩터링
   > [자세히 보기: [https://github.com/f-lab-edu/nutri-diary/wiki/영양성분-계산-로직-리팩터링](https://github.com/f-lab-edu/nutri-diary/wiki/%EC%98%81%EC%96%91%EC%84%B1%EB%B6%84-%EA%B3%84%EC%82%B0-%EB%A1%9C%EC%A7%81-%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81)]
   
   기존에는 비즈니스 로직을 전략 패턴과 팩토리 패턴을 적용하여 구현. 하지만 코드 리뷰를 통해 이 접근 방식이 비즈니스 로직을 이해하기 어렵게 만들고, 요구사항에 비해 복잡하다는 피드백을 받음.
@@ -113,19 +108,18 @@ AI 서비스 Gemini를 활용해 생태 지도를 만들어가는 애플리케�
 
   팀원들마다 선호하는 기술 스택과 아키텍처가 달랐지만, 시간적 제약으로 인해 제가 인프라 구성을 전담. 요구사항을 효율적으로 충족할 수 있는 심플한 아키텍처를 설계했고, 이를 통해 의견 충돌을 최소화하며 프로젝트를 신속하게 진행.
 
-## Issues
-- JPA에서 엔티티 간의 연관관계 확인을 위한 의도치 않은 쿼리 발생
+* JPA에서 엔티티 간의 연관관계 확인을 위한 의도치 않은 쿼리 발생으로 Lazy loading이 적용 안됨.
   > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/eco-spot/one-to-one/README.md](https://github.com/koo995/portfolio/blob/main/src/eco-spot/one-to-one/README.md)]
   
   일대일 양방향 관계에서 Lazy loading이 적용되지 않는 문제가 발생. 원인을 분석한 결과, 외래키를 관리하는 엔티티가 아닌 반대 방향에서 조회 시 연관관계 확인을 위해 불필요한 쿼리가 발생하는 것을 확인.
 
   이를 해결하기 위해 불필요한 양방향 관계를 단방향 관계로 변경하여 필요 없는 쿼리 발생을 방지.
     
-- Firebase 인증을 활용한 자동 회원가입과 로그인 과정의 동시성 이슈
+* Firebase 인증을 활용한 자동 회원가입과 로그인 과정의 동시성 이슈
   > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/src/eco-spot/transaction/README.md](https://github.com/koo995/portfolio/blob/main/src/eco-spot/transaction/README.md)]
   
   인증 과정에서 중복 회원가입으로 인한 API 실행 에러가 발생. 중복 문제는 유니크 제약조건을 적용하여 간단히 해결할 수 있었지만, 이 과정에서 트랜잭션이 적용되지 않은 코드를 발견.
 
   자동 회원가입과 로그인 구현을 위해 트랜잭션을 적용했으나, 원자성이 제대로 보장되지 않아 문제가 지속됨. 문제 상황을 재구현하고 디버깅을 통해 분석한 결과, Spring AOP의 트랜잭션 처리와 애플리케이션/DB 원자성에 대한 이해가 부족했던 것이 원인.
 
-  처음에는 유니크 제약 조건을 적용하고 DataIntegrityViolationException 발생 시 재시도 로직을 추가하여 해결. 하지만 이 예외는 유니크 제약 조건 위반 외의 경우에도 발생할 수 있어 의도하지 않은 재시도가 실행될 수 있다는 문제가 존재. 최종적으로 API 호출 프로세스를 분리하는 방식으로 해결.
+  처음에는 유니크 제약 조건을 적용하고 DataIntegrityViolationException 발생 시 재시도 로직을 추가하여 해결. 하지만 이 예외는 유니크 제약 조건 위반 외의 경우에도 발생할 수 있어 의도하지 않은 재시도가 실행될 수 있다는 문제가 존재. 최종적으로 프로세스가 잘못되었음을 인지하고 API 호출 프로세스를 분리하는 방식 선택.
