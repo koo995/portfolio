@@ -1,6 +1,8 @@
 Spring Boot Tomcat threads.max와 HikariCP maximum-pool-size를 기본으로 설정하면 나타나는 현상?
 ==============================================================================
 
+본 포스팅은 개인 프로젝트[GitHub](https://github.com/f-lab-edu/nutri-diary)에서 발생한 내용이며, 혹시나 마크다운 문법이 보기 불편하시다면 원글에 해당하는 블로그 글을 [여기](https://medium.com/@gunhong951/api%EC%9D%98-%EC%84%B1%EB%8A%A5%EC%9D%84-%EA%B0%9C%EC%84%A0%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%B4%EC%84%A0-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%A0%91%EA%B7%BC%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C-%EC%BF%BC%EB%A6%AC%EB%A7%8C-%EC%83%9D%EA%B0%81%ED%95%98%EB%A9%B4-%EB%90%A0%EA%B9%8C-2%ED%8E%B8-3567f9bca2df)에서 확인하실 수 있습니다.
+
 [이전 글: MySQL의 전문 검색(Full-Text Search)은 100만개가 넘는 데이터에서 문제가 없을까?](https://github.com/koo995/portfolio/blob/main/nutri-diary/elasticsearch.md)
 
 앞선 글에서 Elasticsearch를 도입하여 검색 API의 성능을 크게 향상시켰습니다.
