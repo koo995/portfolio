@@ -56,7 +56,7 @@
 
   JaCoCo 기준으로 테스트 커버리지 80% 이상을 유지했으며, 테스트 코드 작성이 어려운 경우에는 기존 애플리케이션 코드 구조의 문제점을 파악하고 리팩터링을 진행했습니다.
 
-## 주요 딥다이브 이슈
+## 딥다이브 이슈
 * MySQL의 전문 검색(FullText Search)을 사용하는 쿼리의 실행 계획을 분석하고 구조를 개선하여 쿼리의 전체 수행 시간 30배 단축
   > [자세히 보기: [https://github.com/koo995/portfolio/blob/main/nutri-diary/fulltext-search.md](https://github.com/koo995/portfolio/blob/main/nutri-diary/fulltext-search.md)]
   
